@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class Quiz implements Identifiable<Long> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -25,12 +26,9 @@ public class Quiz implements Identifiable<Long> {
     @Column
     private String description;
 
-    @Column
-    private int result;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
+    @OneToMany
+    @JoinColumn
+    private List<Question> questions;
 
     public Long getId() {
         return id;

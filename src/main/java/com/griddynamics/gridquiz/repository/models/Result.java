@@ -1,5 +1,6 @@
 package com.griddynamics.gridquiz.repository.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,28 +8,37 @@ import lombok.ToString;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-@Entity(name = "questions")
-public class Question implements Identifiable<Long> {
+@Entity(name = "results")
+public class Result implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    private String text;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    @JsonIgnore
+    private Quiz quiz;
 
-    @OneToMany
+    @Column
+    private Long points;
+
+    @Column
+    private Long time;
+
+    @ManyToOne
     @JoinColumn
-    private List<Answer> answers;
+    private QuizResultMessage comment;
 
     public Long getId() {
         return id;

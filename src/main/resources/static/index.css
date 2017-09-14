@@ -1,0 +1,16 @@
+body {
+    position: fixed;
+    background-color: #b62820;
+}
+
+.scene {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
