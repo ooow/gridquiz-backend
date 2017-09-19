@@ -29,16 +29,20 @@ public class GenerateDateService {
         user1.setName("user1");
         user1.setEmail("ttt1@mail.ru");
         user1.setPhone("+992473923743");
+        user1.setRole(Role.USER);
+
 
         User user2 = new User();
         user2.setName("user2");
         user2.setEmail("ttt2@mail.ru");
         user2.setPhone("+981234323752");
+        user2.setRole(Role.USER);
 
         User user3 = new User();
         user3.setName("user3");
         user3.setEmail("ttt3@mail.ru");
         user3.setPhone("+941373923712");
+        user3.setRole(Role.USER);
 
         userDao.save(user1);
         userDao.save(user2);
@@ -160,6 +164,7 @@ public class GenerateDateService {
         quiz.setName("Some Name");
         quiz.setDescription("Some Des");
         quiz.setQuestions(questions);
+        quiz.setAttempts(1L);
         quizDao.save(quiz);
 
         QuizResultMessage message = new QuizResultMessage();

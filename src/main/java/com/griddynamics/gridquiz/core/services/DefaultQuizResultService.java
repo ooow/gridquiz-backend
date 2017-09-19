@@ -4,7 +4,7 @@ import com.griddynamics.gridquiz.api.models.UserAnswersModel;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import com.griddynamics.gridquiz.repository.models.QuizResultMessage;
-import com.griddynamics.gridquiz.repository.models.Result;
+import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +31,8 @@ public class DefaultQuizResultService implements QuizResultService {
     private QuizResultMessageDao messageDao;
 
     @Override
-    public Result calculateResult(List<UserAnswersModel> answers) {
-        Result result = new Result();
+    public UserResult calculateResult(List<UserAnswersModel> answers) {
+        UserResult result = new UserResult();
         Long points = seq(answers).filter(answer -> answerDao.findOne(answer.getAnswerId()).isCorrectly()).count();
         Quiz quiz = seq(answers)
                 .map(answer -> quizDao.findOne(answer.getQuizId()))
@@ -43,8 +43,8 @@ public class DefaultQuizResultService implements QuizResultService {
         result.setComment(getMessageForQuiz(quiz, points));
 
         //todo fix me please :)
-
-        result.setTime(123L);
+        result.setStartTime(1L);
+        result.setEndTime(1L);
         result.setUser(userDao.findOne(1L));
 
         resultDao.save(result);

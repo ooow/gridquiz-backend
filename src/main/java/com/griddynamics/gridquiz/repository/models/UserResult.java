@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Entity(name = "results")
-public class Result implements Identifiable<Long> {
+@Entity(name = "user_results")
+public class UserResult implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,10 @@ public class Result implements Identifiable<Long> {
     private Long points;
 
     @Column
-    private Long time;
+    private Long startTime;
+
+    @Column
+    private Long endTime;
 
     @ManyToOne
     @JoinColumn

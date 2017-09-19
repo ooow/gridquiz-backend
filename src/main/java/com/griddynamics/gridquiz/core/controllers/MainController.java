@@ -5,8 +5,7 @@ import com.griddynamics.gridquiz.common.GenerateDateService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.models.Quiz;
-import com.griddynamics.gridquiz.repository.models.QuizResultMessage;
-import com.griddynamics.gridquiz.repository.models.Result;
+import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +34,18 @@ public class MainController {
     @CrossOrigin
     @PostMapping(value = "/quiz/result")
     @ResponseBody
-    public Result quizResult(@RequestBody List<UserAnswersModel> answers) {
+    public UserResult quizResult(@RequestBody List<UserAnswersModel> answers) {
         return quizResultService.calculateResult(answers);
     }
+
+    /*
+    @CrossOrigin
+    @PostMapping(value = "/quiz/startquiz")
+    @ResponseBody
+    public String startQuiz(@RequestBody UserStartQuizModel timestamp) {
+
+    }*/
+
 
     @GetMapping(value = "/generate")
     public String generate() {

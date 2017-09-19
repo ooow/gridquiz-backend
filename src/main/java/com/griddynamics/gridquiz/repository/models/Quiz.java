@@ -26,6 +26,9 @@ public class Quiz implements Identifiable<Long> {
     @Column
     private String description;
 
+    @Column
+    private Long attempts;
+
     @OneToMany
     @JoinColumn
     private List<Question> questions;

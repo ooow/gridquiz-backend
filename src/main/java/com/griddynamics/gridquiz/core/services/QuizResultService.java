@@ -1,11 +1,11 @@
 package com.griddynamics.gridquiz.core.services;
 
 import com.griddynamics.gridquiz.api.models.UserAnswersModel;
-import com.griddynamics.gridquiz.repository.models.Result;
+import com.griddynamics.gridquiz.repository.models.UserResult;
 
 import java.util.List;
 
 public interface QuizResultService {
 
-    Result calculateResult(List<UserAnswersModel> answers);
+    UserResult calculateResult(List<UserAnswersModel> answers);
 }

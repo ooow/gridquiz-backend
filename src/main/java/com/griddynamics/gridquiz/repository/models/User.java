@@ -1,5 +1,6 @@
 package com.griddynamics.gridquiz.repository.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +23,15 @@ public class User implements Identifiable<Long> {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
     @Column
     private String phone;
+
+    @Column
+    @JsonIgnore
+    private Role role;
 
     public Long getId() {
         return id;
