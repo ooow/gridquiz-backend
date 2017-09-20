@@ -1,5 +1,6 @@
 package com.griddynamics.gridquiz.repository.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,27 +13,16 @@ import javax.persistence.*;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Entity(name = "users")
-public class User implements Identifiable<Long> {
+@Entity(name = "colors")
+public class Color implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column
-    private String email;
-
-    @Column
-    private String phone;
-
-    @Column
-    private Role role;
-
-    @Column
-    private String token;
+    private String code;
 
     public Long getId() {
         return id;

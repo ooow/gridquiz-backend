@@ -1,11 +1,13 @@
 package com.griddynamics.gridquiz.common;
 
+import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GenerateDateService {
@@ -22,6 +24,9 @@ public class GenerateDateService {
     private QuizDao quizDao;
 
     @Autowired
+    private ColorDao colorDao;
+
+    @Autowired
     private QuizResultMessageDao messageDao;
 
     public void generate() {
@@ -29,19 +34,21 @@ public class GenerateDateService {
         user1.setName("user1");
         user1.setEmail("ttt1@mail.ru");
         user1.setPhone("+992473923743");
+        user1.setToken(TokenGenerator.generateToken(user1.getEmail() + user1.getPhone()));
         user1.setRole(Role.USER);
-
 
         User user2 = new User();
         user2.setName("user2");
         user2.setEmail("ttt2@mail.ru");
         user2.setPhone("+981234323752");
+        user2.setToken(TokenGenerator.generateToken(user2.getEmail() + user2.getPhone()));
         user2.setRole(Role.USER);
 
         User user3 = new User();
         user3.setName("user3");
         user3.setEmail("ttt3@mail.ru");
         user3.setPhone("+941373923712");
+        user3.setToken(TokenGenerator.generateToken(user3.getEmail() + user3.getPhone()));
         user3.setRole(Role.USER);
 
         userDao.save(user1);
@@ -160,11 +167,24 @@ public class GenerateDateService {
         questions.add(question2);
         questionDao.save(question2);
 
+        List<Color> colorList = new ArrayList<>();
+
+        Color color1 = new Color();
+        color1.setCode("#EA3440");
+        colorList.add(color1);
+        colorDao.save(color1);
+
+        Color color2 = new Color();
+        color2.setCode("#DA3A4C");
+        colorList.add(color2);
+        colorDao.save(color2);
+
+
         Quiz quiz = new Quiz();
         quiz.setName("Some Name");
         quiz.setDescription("Some Des");
         quiz.setQuestions(questions);
-        quiz.setAttempts(1L);
+        quiz.setColors(colorList);
         quizDao.save(quiz);
 
         QuizResultMessage message = new QuizResultMessage();
