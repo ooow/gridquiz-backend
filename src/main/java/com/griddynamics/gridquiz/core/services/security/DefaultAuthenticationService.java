@@ -1,6 +1,6 @@
-package com.griddynamics.gridquiz.core.services;
+package com.griddynamics.gridquiz.core.services.security;
 
-import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
+import com.griddynamics.gridquiz.core.services.AuthenticationService;
 import com.griddynamics.gridquiz.repository.UserDao;
 import com.griddynamics.gridquiz.repository.models.Role;
 import com.griddynamics.gridquiz.repository.models.User;

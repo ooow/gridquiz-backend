@@ -24,6 +24,10 @@ public class MiniQuizzesModel {
 
     private int questionsSize;
 
+    private int questionsComplete;
+
+    private boolean attempt;
+
     public Long getId() {
         return id;
     }

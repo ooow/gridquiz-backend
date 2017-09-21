@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,13 +32,16 @@ public class UserResult implements Identifiable<Long> {
     private Quiz quiz;
 
     @Column
-    private Long points;
+    private int points;
 
     @Column
-    private Long startTime;
+    private LocalDateTime startTime;
 
     @Column
-    private Long endTime;
+    private LocalDateTime endTime;
+
+    @Column
+    private boolean approved;
 
     @ManyToOne
     @JoinColumn

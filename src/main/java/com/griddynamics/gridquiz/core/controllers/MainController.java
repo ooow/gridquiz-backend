@@ -2,10 +2,10 @@ package com.griddynamics.gridquiz.core.controllers;
 
 import com.griddynamics.gridquiz.api.models.MiniQuizzesModel;
 import com.griddynamics.gridquiz.api.models.UserAnswersModel;
-import com.griddynamics.gridquiz.api.models.UserStartQuizModel;
 import com.griddynamics.gridquiz.common.GenerateDateService;
 import com.griddynamics.gridquiz.core.services.AuthenticationService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
+import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
 import com.griddynamics.gridquiz.repository.UserDao;
@@ -42,6 +42,9 @@ public class MainController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private SecurityValidationService securityValidationService;
+
     @PostMapping(value = "/quizzes")
     @ResponseBody
     public List<MiniQuizzesModel> quizzes() {
@@ -53,16 +56,46 @@ public class MainController {
             miniQuiz.setDescription(quiz.getDescription());
             miniQuiz.setColors(quiz.getColors());
             miniQuiz.setQuestionsSize(quiz.getQuestions().size());
+            miniQuiz.setQuestionsComplete(0);
+            return miniQuiz;
+        }).toList();
+    }
+
+    @PostMapping(value = "/quizzes/history")
+    @ResponseBody
+    public List<MiniQuizzesModel> loadQuizzesHistoryForUser(@RequestHeader(value = "X-User-Token") String userToken) {
+        if (securityValidationService.validateToken(userToken)) {
+            return null;
+        }
+        return seq(quizDao.findAll()).map(quiz -> {
+            MiniQuizzesModel miniQuiz = new MiniQuizzesModel();
+            miniQuiz.setId(quiz.getId());
+            miniQuiz.setName(quiz.getName());
+            miniQuiz.setDescription(quiz.getDescription());
+            miniQuiz.setColors(quiz.getColors());
+            miniQuiz.setQuestionsSize(quiz.getQuestions().size());
+
+            seq(resultDao.findByQuiz(quiz))
+                    .filter(res -> res.getUser().getToken().equals(userToken))
+                    .findFirst()
+                    .ifPresent(res -> {
+                        miniQuiz.setQuestionsComplete(res.getPoints());
+                        miniQuiz.setAttempt(true);
+                    });
+
             return miniQuiz;
         }).toList();
     }
 
     @PostMapping(value = "/quiz/start")
     @ResponseBody
-    public Quiz quiz(@RequestBody UserStartQuizModel model) {
-        //todo validate user and save start to result
+    public Quiz quiz(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody Long quizId) {
+        if (!securityValidationService.canStartQuiz(quizId, userToken)) {
+            return null;
+        }
+        quizResultService.startQuiz(quizId, userToken);
 
-        return quizDao.findOne(model.getQuizId());
+        return quizDao.findOne(quizId);
     }
 
     @PostMapping(value = "/quiz/create")
@@ -75,8 +108,8 @@ public class MainController {
 
     @PostMapping(value = "/quiz/result")
     @ResponseBody
-    public UserResult quizResult(@RequestBody List<UserAnswersModel> answers) {
-        return quizResultService.calculateResult(answers);
+    public UserResult quizResult(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<UserAnswersModel> answers) {
+        return quizResultService.calculateResult(answers, userToken);
     }
 
     @GetMapping(value = "/users")
@@ -102,15 +135,6 @@ public class MainController {
 
         return authenticationService.authUser(user);
     }
-
-    /*
-    @CrossOrigin
-    @PostMapping(value = "/quiz/startquiz")
-    @ResponseBody
-    public String startQuiz(@RequestBody UserStartQuizModel timestamp) {
-
-    }*/
-
 
     @GetMapping(value = "/generate")
     public String generate() {

@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface QuizResultService {
 
-    UserResult calculateResult(List<UserAnswersModel> answers);
+    UserResult calculateResult(List<UserAnswersModel> answers, String userToken);
+
+    void startQuiz(Long quizId, String userToken);
 }

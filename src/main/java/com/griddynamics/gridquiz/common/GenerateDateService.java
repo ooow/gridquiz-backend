@@ -1,6 +1,5 @@
 package com.griddynamics.gridquiz.common;
 
-import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class GenerateDateService {
     private QuizResultMessageDao messageDao;
 
     public void generate() {
-        User user1 = new User();
+/*        User user1 = new User();
         user1.setName("user1");
         user1.setEmail("ttt1@mail.ru");
         user1.setPhone("+992473923743");
@@ -53,7 +52,7 @@ public class GenerateDateService {
 
         userDao.save(user1);
         userDao.save(user2);
-        userDao.save(user3);
+        userDao.save(user3);*/
 
 
         ArrayList<Answer> answers = new ArrayList<>();
