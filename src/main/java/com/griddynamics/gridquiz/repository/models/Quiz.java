@@ -34,6 +34,15 @@ public class Quiz implements Identifiable<Long> {
     @JoinColumn
     private List<Question> questions;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    public enum Type {
+        TEST,
+        QUIZ
+    }
+
     public Long getId() {
         return id;
     }

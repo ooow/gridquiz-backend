@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.jooq.lambda.Seq.seq;
 
@@ -76,11 +77,13 @@ public class MainController {
             miniQuiz.setQuestionsSize(quiz.getQuestions().size());
 
             seq(resultDao.findByQuiz(quiz))
-                    .filter(res -> res.getUser().getToken().equals(userToken))
+                    .filter(r -> r.getUser().getToken().equals(userToken))
                     .findFirst()
-                    .ifPresent(res -> {
-                        miniQuiz.setQuestionsComplete(res.getPoints());
-                        miniQuiz.setAttempt(true);
+                    .ifPresent(r -> {
+                        miniQuiz.setQuestionsComplete(r.getPoints());
+                        if (Objects.nonNull(r.getEndTime())) {
+                            miniQuiz.setAttempt(true);
+                        }
                     });
 
             return miniQuiz;

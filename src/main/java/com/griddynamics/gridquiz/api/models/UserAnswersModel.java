@@ -12,5 +12,5 @@ import lombok.ToString;
 public class UserAnswersModel {
     private Long quizId;
     private Long questionId;
-    private Long answerId;
+    private String answer;
 }

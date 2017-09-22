@@ -3,6 +3,7 @@ package com.griddynamics.gridquiz.core.services.result;
 import com.griddynamics.gridquiz.api.models.UserAnswersModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.*;
+import com.griddynamics.gridquiz.repository.models.Answer;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import com.griddynamics.gridquiz.repository.models.QuizResultMessage;
 import com.griddynamics.gridquiz.repository.models.UserResult;
@@ -31,6 +32,9 @@ public class DefaultQuizResultService implements QuizResultService {
     private ResultDao resultDao;
 
     @Autowired
+    private QuestionDao questionDao;
+
+    @Autowired
     private QuizResultMessageDao messageDao;
 
     @Override
@@ -38,14 +42,29 @@ public class DefaultQuizResultService implements QuizResultService {
         Quiz quiz = seq(answers)
                 .map(answer -> quizDao.findOne(answer.getQuizId()))
                 .findFirst().orElseGet(null);
-        int points = Math.toIntExact(seq(answers).filter(answer -> answerDao.findOne(answer.getAnswerId()).isCorrectly()).count());
-
         UserResult result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
                 .filter(r -> r.getQuiz().equals(quiz))
                 .findFirst()
                 .orElse(null);
 
         if (Objects.nonNull(result)) {
+
+            int points;
+            if (Quiz.Type.QUIZ.equals(quiz.getType())) {
+                points = Math.toIntExact(
+                        seq(answers)
+                                .filter(a ->
+                                        seq(questionDao.findOne(a.getQuestionId()).getAnswers())
+                                                .map(Answer::getTextFieldAnswer)
+                                                .anyMatch(a.getAnswer().toLowerCase()::equals))
+                                .count());
+            } else {
+                points = Math.toIntExact(
+                        seq(answers)
+                                .filter(a -> answerDao.findOne(Long.valueOf(a.getAnswer())).isCorrectly())
+                                .count());
+            }
+
             result.setPoints(points);
             result.setQuiz(quiz);
             result.setComment(getMessageForQuiz(quiz, points));
@@ -60,12 +79,19 @@ public class DefaultQuizResultService implements QuizResultService {
 
     @Override
     public void startQuiz(Long quizId, String userToken) {
-        UserResult result = new UserResult();
-        result.setUser(userDao.findByToken(userToken));
-        result.setQuiz(quizDao.findOne(quizId));
-        result.setStartTime(LocalDateTime.now());
+        Quiz quiz = quizDao.findOne(quizId);
+        UserResult result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
+                .filter(r -> r.getQuiz().equals(quiz))
+                .findFirst()
+                .orElse(null);
+        if (Objects.isNull(result)) {
+            result = new UserResult();
+            result.setUser(userDao.findByToken(userToken));
+            result.setQuiz(quiz);
+            result.setStartTime(LocalDateTime.now());
 
-        resultDao.save(result);
+            resultDao.save(result);
+        }
     }
 
     private QuizResultMessage getMessageForQuiz(Quiz quiz, int points) {

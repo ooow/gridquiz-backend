@@ -24,11 +24,12 @@ public class Answer implements Identifiable<Long> {
     private String text;
 
     @JsonIgnore
+    @Column
+    private String textFieldAnswer;
+
+    @JsonIgnore
     @Column(nullable = false)
     private boolean correctly;
-
-    @Column
-    private boolean textField;
 
     public Long getId() {
         return id;

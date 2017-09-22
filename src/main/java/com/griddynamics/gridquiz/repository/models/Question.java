@@ -20,11 +20,22 @@ public class Question implements Identifiable<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1024)
+    private String text;
+
+    @Column
     private String title;
 
-    @Column(nullable = false)
-    private String text;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    public enum Type {
+        TEXT,
+        CODE,
+        INPUT
+    }
+
 
     @OneToMany
     @JoinColumn
