@@ -1,5 +1,7 @@
 package com.griddynamics.gridquiz.core.services.result;
 
+import com.griddynamics.gridquiz.api.models.DashboardModel;
+import com.griddynamics.gridquiz.api.models.NonApprovedModel;
 import com.griddynamics.gridquiz.api.models.UserAnswersModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.*;
@@ -10,6 +12,7 @@ import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -92,6 +95,59 @@ public class DefaultQuizResultService implements QuizResultService {
 
             resultDao.save(result);
         }
+    }
+
+    @Override
+    public List<DashboardModel> generateDashboard() {
+        return seq(quizDao.findAll())
+                .map(q -> {
+                            List<UserResult> top = resultDao.findTop5ByQuizAndApprovedOrderByPointsDesc(q, true);
+
+                            top.sort((r1, r2) -> {
+                                if (r1.getPoints() > r2.getPoints()) {
+                                    return -1;
+                                }
+                                if (r1.getPoints() < r2.getPoints()) {
+                                    return 1;
+                                }
+                                if (r1.getPoints() == r2.getPoints()) {
+                                    if (firstBeFirst(r1, r2)) {
+                                        return -1;
+                                    } else {
+                                        return 1;
+                                    }
+                                }
+                                return 0;
+                            });
+
+
+                            return new DashboardModel(q.getName(),
+                                    seq(top).zipWithIndex()
+                                            .map(r -> new DashboardModel.DashboardResultModel(
+                                                            Math.toIntExact(r.v2),
+                                                            r.v1.getUser().getName(),
+                                                            String.valueOf(r.v1.getPoints()),
+                                                            String.valueOf(getResultTime(r.v1.getStartTime(), r.v1.getEndTime()))
+                                                    )
+                                            ).toList()
+                            );
+                        }
+                ).toList();
+    }
+
+    @Override
+    public List<NonApprovedModel> nonApproved() {
+        return seq(resultDao.findAllByApproved(false))
+                .map(r -> new NonApprovedModel(r.getId(), r.getUser().getName(), r.getPoints()))
+                .toList();
+    }
+
+    private boolean firstBeFirst(UserResult r1, UserResult r2) {
+        return getResultTime(r1.getStartTime(), r1.getEndTime()) <= getResultTime(r2.getStartTime(), r2.getEndTime());
+    }
+
+    private long getResultTime(LocalDateTime t1, LocalDateTime t2) {
+        return Duration.between(t1, t2).toMillis();
     }
 
     private QuizResultMessage getMessageForQuiz(Quiz quiz, int points) {

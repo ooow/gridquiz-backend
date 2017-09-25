@@ -20,7 +20,7 @@ public class Question implements Identifiable<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 1024)
+    @Column(length = 1024)
     private String text;
 
     @Column
@@ -35,7 +35,6 @@ public class Question implements Identifiable<Long> {
         CODE,
         INPUT
     }
-
 
     @OneToMany
     @JoinColumn

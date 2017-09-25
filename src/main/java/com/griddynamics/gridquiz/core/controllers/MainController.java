@@ -1,11 +1,12 @@
 package com.griddynamics.gridquiz.core.controllers;
 
+import com.griddynamics.gridquiz.api.models.DashboardModel;
 import com.griddynamics.gridquiz.api.models.MiniQuizzesModel;
 import com.griddynamics.gridquiz.api.models.UserAnswersModel;
-import com.griddynamics.gridquiz.common.GenerateDateService;
 import com.griddynamics.gridquiz.core.services.AuthenticationService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
+import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
 import com.griddynamics.gridquiz.repository.UserDao;
@@ -35,9 +36,6 @@ public class MainController {
     private ResultDao resultDao;
 
     @Autowired
-    private GenerateDateService generateDateService;
-
-    @Autowired
     private QuizResultService quizResultService;
 
     @Autowired
@@ -45,6 +43,17 @@ public class MainController {
 
     @Autowired
     private SecurityValidationService securityValidationService;
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception e) {
+
+        if (e instanceof SecurityValidationException) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+
+        return "Internal error.";
+    }
 
     @PostMapping(value = "/quizzes")
     @ResponseBody
@@ -65,9 +74,8 @@ public class MainController {
     @PostMapping(value = "/quizzes/history")
     @ResponseBody
     public List<MiniQuizzesModel> loadQuizzesHistoryForUser(@RequestHeader(value = "X-User-Token") String userToken) {
-        if (securityValidationService.validateToken(userToken)) {
-            return null;
-        }
+        securityValidationService.validateToken(userToken);
+
         return seq(quizDao.findAll()).map(quiz -> {
             MiniQuizzesModel miniQuiz = new MiniQuizzesModel();
             miniQuiz.setId(quiz.getId());
@@ -93,43 +101,18 @@ public class MainController {
     @PostMapping(value = "/quiz/start")
     @ResponseBody
     public Quiz quiz(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody Long quizId) {
-        if (!securityValidationService.canStartQuiz(quizId, userToken)) {
-            return null;
-        }
+        securityValidationService.canStartQuiz(quizId, userToken);
+
         quizResultService.startQuiz(quizId, userToken);
-
         return quizDao.findOne(quizId);
-    }
-
-    @PostMapping(value = "/quiz/create")
-    public String createQuiz(@RequestBody Quiz quiz) {
-        quizDao.save(quiz);
-        String successMessage = "Quiz " + quiz.getName() + " created";
-
-        return successMessage;
     }
 
     @PostMapping(value = "/quiz/result")
     @ResponseBody
     public UserResult quizResult(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<UserAnswersModel> answers) {
+        securityValidationService.validateToken(userToken);
+
         return quizResultService.calculateResult(answers, userToken);
-    }
-
-    @GetMapping(value = "/users")
-    @ResponseBody
-    public Iterable<User> getUsers() {
-        return userDao.findAll();
-    }
-
-    @PostMapping(value = "/users/remove")
-    @ResponseBody
-    public Iterable<User> removeUsers(@RequestBody List<Long> userIds) {
-        // remove user results story
-        seq(userIds).forEach(userId -> resultDao.removeByUser(userDao.findOne(userId)));
-        // delete users
-        seq(userIds).forEach(userId -> userDao.delete(userId));
-
-        return userDao.findAll();
     }
 
     @PostMapping(value = "/auth/user")
@@ -139,9 +122,8 @@ public class MainController {
         return authenticationService.authUser(user);
     }
 
-    @GetMapping(value = "/generate")
-    public String generate() {
-        generateDateService.generate();
-        return "index";
+    @GetMapping(value = "/dashboard")
+    public List<DashboardModel> dashboard() {
+        return quizResultService.generateDashboard();
     }
 }

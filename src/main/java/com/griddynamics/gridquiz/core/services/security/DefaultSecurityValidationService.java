@@ -4,6 +4,7 @@ import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
 import com.griddynamics.gridquiz.repository.UserDao;
+import com.griddynamics.gridquiz.repository.models.Role;
 import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,23 +27,31 @@ public class DefaultSecurityValidationService implements SecurityValidationServi
     QuizDao quizDao;
 
     @Override
-    public boolean canStartQuiz(Long quizId, String userToken) {
-        User user = userDao.findByToken(userToken);
-
-        if (!Objects.nonNull(user)) {
-            return false;
-        }
+    public void canStartQuiz(Long quizId, String userToken) {
+        validateToken(userToken);
 
         UserResult result = seq(resultDao.findByQuiz(quizDao.findOne(quizId)))
                 .filter(res -> res.getUser().getToken().equals(userToken))
                 .findFirst()
                 .orElse(null);
 
-        return !Objects.nonNull(result) || Objects.isNull(result.getEndTime());
+        if (Objects.nonNull(result) && Objects.nonNull(result.getEndTime())) {
+            throw new SecurityValidationException("Quiz already complete.");
+        }
     }
 
     @Override
-    public boolean validateToken(String userToken) {
-        return Objects.isNull(userDao.findByToken(userToken));
+    public void validateToken(String userToken) {
+        if (Objects.isNull(userDao.findByToken(userToken))) {
+            throw new SecurityValidationException("User not found.");
+        }
+    }
+
+    @Override
+    public void isAdmin(String userToken) {
+        User user = userDao.findByToken(userToken);
+        if (Objects.isNull(user) || !Role.ADMIN.equals(user.getRole())) {
+            throw new SecurityValidationException("Permission denied.");
+        }
     }
 }

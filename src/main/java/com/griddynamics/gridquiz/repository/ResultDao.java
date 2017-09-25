@@ -8,13 +8,15 @@ import org.springframework.data.repository.CrudRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface ResultDao extends CrudRepository<UserResult, Long> {
-    @Transactional
     List<UserResult> removeByUser(User user);
 
-    @Transactional
     List<UserResult> findByQuiz(Quiz quiz);
 
-    @Transactional
     List<UserResult> findByUser(User user);
+
+    List<UserResult> findTop5ByQuizAndApprovedOrderByPointsDesc(Quiz quiz, boolean approved);
+
+    List<UserResult> findAllByApproved(boolean approved);
 }

@@ -32,7 +32,7 @@ public class GenerateDateService {
 
         //DevOps Technical Quiz
         Answer a;
-        Question q = new Question();
+        Question q;
 
 
         ArrayList<Answer> answers = new ArrayList<>();
@@ -63,7 +63,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("DevOps is:");
+        q.setTitle("DevOps is");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -96,7 +96,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("What is the command in Docker to list all running containers?");
+        q.setTitle("What is the command in Docker to list all running containers?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -123,7 +123,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Playbooks in Ansible are in:");
+        q.setTitle("Playbooks in Ansible are in:");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -150,7 +150,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Which one of followings is NOT a CMT (Configuration Management Tool):");
+        q.setTitle("Which one of followings is NOT a CMT (Configuration Management Tool)");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -171,7 +171,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Cloudformation Templates are simple JSON-formatted text files.");
+        q.setTitle("Cloudformation Templates are simple JSON-formatted text files");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -198,7 +198,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Name two commands that cannot be triggered by the ONBUILD docker command");
+        q.setTitle("Name two commands that cannot be triggered by the ONBUILD docker command");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -231,7 +231,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Which of these statements are true:");
+        q.setTitle("Which of these statements are true");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -270,7 +270,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Yum package manager is used by which of the Linux distributions (choose all that apply):");
+        q.setTitle("Yum package manager is used by which of the Linux distributions (choose all that apply)");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -292,7 +292,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("[AWS] Does ELB ( Elastic Load Balancer ) support EIP (Elastic IP) Association - True or False?");
+        q.setTitle("[AWS] Does ELB ( Elastic Load Balancer ) support EIP (Elastic IP) Association - True or False ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -319,7 +319,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("[AWS] What’s the preferred instance type for applications with short term, spiky, or unpredictable workloads that cannot be interrupted?");
+        q.setTitle("[AWS] What’s the preferred instance type for applications with short term, spiky, or unpredictable workloads that cannot be interrupted ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -352,7 +352,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("How many SSL Certificates can you associate with an ELB ( Elastic Load Balancer ) Instance?");
+        q.setTitle("How many SSL Certificates can you associate with an ELB ( Elastic Load Balancer ) Instance ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -374,7 +374,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("Does AWS VPC Peering support Transitive Peering - True or False?");
+        q.setTitle("Does AWS VPC Peering support Transitive Peering - True or False ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -470,7 +470,7 @@ public class GenerateDateService {
                 "\t\tSystem.out.println(vitamins);\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("What is the result?");
+        q.setTitle("What is the result ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -513,7 +513,7 @@ public class GenerateDateService {
                 "\t\te = null;\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("Which statement is true about this code?");
+        q.setTitle("Which statement is true about this code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -560,7 +560,7 @@ public class GenerateDateService {
                 "\t\tCart c = new OnlineCart();\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("Which code fragment can be inserted at line n1 to enable the Shop to compile?");
+        q.setTitle("Which code fragment can be inserted at line n1 to enable the Shop to compile ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -598,7 +598,7 @@ public class GenerateDateService {
                 "\tlong monthDays = weekDays * 4;\t\t// line n2\n" +
                 "\tlong yearDays = monthDays * 12L;\t\t// line n3\n" +
                 "\tlong totalWage = yearDays * wage;\t\t// line n4\n");
-        q.setTitle("Which modification enables the code to compile?");
+        q.setTitle("Which modification enables the code to compile ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -654,7 +654,7 @@ public class GenerateDateService {
                 "\t\ty = x++ + ++x;\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("What will happen when you attempt to compile and run the following code?");
+        q.setTitle("What will happen when you attempt to compile and run the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -696,7 +696,7 @@ public class GenerateDateService {
                 "\t\telse System.out.println(\"Nothing is true in this world!\");\n" +
                 "\telse if (a && (b = c)) System.out.println(\"It is too confusing to tell what is true and what is false\");\n" +
                 "\t\telse System.out.println(\"Hey this won't compile\");");
-        q.setTitle("What will be the result of executing the following code?");
+        q.setTitle("What will be the result of executing the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -755,7 +755,7 @@ public class GenerateDateService {
                 "\t}\n" +
                 "}\n");
         q.setAnswers(answers);
-        q.setTitle("Given the following code, what will be the output");
+        q.setTitle("Given the following code, what will be the output ?");
         q.setType(Question.Type.CODE);
         questions.add(q);
         questionDao.save(q);
@@ -787,7 +787,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("The class AssertionError has \"is-a\" relationship with these classes?");
+        q.setTitle("The class AssertionError has \"is-a\" relationship with these classes ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -828,7 +828,7 @@ public class GenerateDateService {
                 "\t    System.out.println(\"Value is - \" + ((a < 5) ? 9.9 : 9));\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("What will happen when you attempt to compile and run the following code?");
+        q.setTitle("What will happen when you attempt to compile and run the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -885,7 +885,7 @@ public class GenerateDateService {
                 "\t\tint i = j;\n" +
                 "\t\tSystem.out.println(i);\n" +
                 "\t}\n");
-        q.setTitle("What will be the result of executing the following code?");
+        q.setTitle("What will be the result of executing the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -943,7 +943,7 @@ public class GenerateDateService {
                 "\t\ti = objY.superclassVarX;\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("What will be the result of executing the following code?");
+        q.setTitle("What will be the result of executing the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -994,7 +994,7 @@ public class GenerateDateService {
                 "\t\tobj.myMethod(ch);\n" +
                 "\t}\n" +
                 "}\n");
-        q.setTitle("What will be the result of executing the following code?");
+        q.setTitle("What will be the result of executing the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
@@ -1076,8 +1076,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Blog Challenge");
-        q.setTitle("Check the first article of ML & AI section of our Tech Blog (https://blog.griddynamics.com/) and type in what stands for CUI in our context");
+        q.setTitle("Blog Challenge");
+        q.setText("Check the first article of ML & AI section of our Tech Blog (https://blog.griddynamics.com/) and type in what stands for CUI in our context");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1107,8 +1107,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Code Challenge");
-        q.setTitle("Find three codes hidden in different parts of the conference hall that start with GDXXXX and insert the numbers in the boxes below");
+        q.setTitle("Code Challenge");
+        q.setText("Find three codes hidden in different parts of the conference hall that start with GDXXXX and insert the numbers in the boxes below");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1124,8 +1124,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Grid Labs Challenge #1");
-        q.setTitle("Stop by our booth and attend Live Demo session at XX:XXpm. Check out the demo of our current projects and fill in the secret phrase provided by a speaker at the end of the session");
+        q.setTitle("Grid Labs Challenge #1");
+        q.setText("Stop by our booth and attend Live Demo session at XX:XXpm. Check out the demo of our current projects and fill in the secret phrase provided by a speaker at the end of the session");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1141,8 +1141,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Grid Labs Challenge #2");
-        q.setTitle("One of our projects is called ML Sandbox. What does ‘ML’ stand for?");
+        q.setTitle("Grid Labs Challenge #2");
+        q.setText("One of our projects is called ML Sandbox. What does ‘ML’ stand for ?");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1158,8 +1158,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Grid Dynamics Meetup Challenge");
-        q.setTitle("One of our projects is called ML Sandbox. What does ‘ML’ stand for?");
+        q.setTitle("Grid Dynamics Meetup Challenge");
+        q.setText("One of our projects is called ML Sandbox. What does ‘ML’ stand for ?");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1175,8 +1175,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Social Media Challenge");
-        q.setTitle("Find us on Facebook and complete the link below");
+        q.setTitle("Social Media Challenge");
+        q.setText("Find us on Facebook and complete the link below");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
@@ -1192,8 +1192,8 @@ public class GenerateDateService {
 
         q = new Question();
         q.setType(Question.Type.INPUT);
-        q.setText("Grid Dynamics Booth Challenge");
-        q.setTitle("Stop by our booth and reach out to one of the members, he/she will tell you a secret word to insert below");
+        q.setTitle("Grid Dynamics Booth Challenge");
+        q.setText("Stop by our booth and reach out to one of the members, he/she will tell you a secret word to insert below");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
