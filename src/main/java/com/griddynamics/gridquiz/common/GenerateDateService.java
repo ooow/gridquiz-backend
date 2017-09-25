@@ -11,9 +11,6 @@ import java.util.List;
 @Service
 public class GenerateDateService {
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
     private AnswerDao answerDao;
 
     @Autowired
@@ -1105,6 +1102,25 @@ public class GenerateDateService {
         answers.add(a);
         answerDao.save(a);
 
+        a = new Answer();
+        a.setText("GD");
+        a.setTextFieldAnswer("GD2006");
+        a.setCorrectly(true);
+        answers.add(a);
+        answerDao.save(a);
+
+        a.setText("GD");
+        a.setTextFieldAnswer("GDBIGDATA");
+        a.setCorrectly(true);
+        answers.add(a);
+        answerDao.save(a);
+
+        a.setText("GD");
+        a.setTextFieldAnswer("GD0322420475");
+        a.setCorrectly(true);
+        answers.add(a);
+        answerDao.save(a);
+
         q = new Question();
         q.setType(Question.Type.INPUT);
         q.setTitle("Code Challenge");
@@ -1118,6 +1134,13 @@ public class GenerateDateService {
         a = new Answer();
         a.setText("Artificial Intelligence is the ");
         a.setTextFieldAnswer("future");
+        a.setCorrectly(true);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Artificial Intelligence is the ");
+        a.setTextFieldAnswer("artificial intelligence is the future");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
@@ -1156,10 +1179,17 @@ public class GenerateDateService {
         answers.add(a);
         answerDao.save(a);
 
+        a = new Answer();
+        a.setText(" as Code");
+        a.setTextFieldAnswer("infrastructure as code");
+        a.setCorrectly(true);
+        answers.add(a);
+        answerDao.save(a);
+
         q = new Question();
         q.setType(Question.Type.INPUT);
         q.setTitle("Grid Dynamics Meetup Challenge");
-        q.setText("One of our projects is called ML Sandbox. What does ‘ML’ stand for ?");
+        q.setText("Check the Grid Dynamics meetup topics on October 1 and complete one of the topics below with a proper word");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);

@@ -17,10 +17,14 @@ public class DefaultAuthenticationService implements AuthenticationService {
 
     @Override
     public User authUser(User user) {
-        User authUser = userDao.findByPhone(user.getPhone());
-
+        User authUser = null;
+        if (!"".equals(user.getPhone())) {
+            authUser = userDao.findByPhone(user.getPhone());
+        }
         if (Objects.isNull(authUser)) {
-            authUser = userDao.findByEmail(user.getEmail());
+            if (!"".equals(user.getEmail())) {
+                authUser = userDao.findByEmail(user.getEmail());
+            }
             if (Objects.isNull(authUser)) {
                 authUser = registerUser(user);
             }

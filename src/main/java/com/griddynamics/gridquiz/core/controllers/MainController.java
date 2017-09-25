@@ -9,7 +9,6 @@ import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
-import com.griddynamics.gridquiz.repository.UserDao;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
@@ -28,9 +27,6 @@ public class MainController {
 
     @Autowired
     private QuizDao quizDao;
-
-    @Autowired
-    private UserDao userDao;
 
     @Autowired
     private ResultDao resultDao;

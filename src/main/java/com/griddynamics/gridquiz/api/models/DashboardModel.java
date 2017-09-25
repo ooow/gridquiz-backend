@@ -15,7 +15,7 @@ public class DashboardModel {
 
     @AllArgsConstructor
     public static class DashboardResultModel {
-        public int position;
+        public String position;
         public String name;
         public String result;
         public String time;
