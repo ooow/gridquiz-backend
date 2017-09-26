@@ -10,7 +10,6 @@ import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
 import com.griddynamics.gridquiz.repository.UserDao;
 import com.griddynamics.gridquiz.repository.models.Quiz;
-import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +72,7 @@ public class AdminController {
 
     @PostMapping(value = "/users/remove")
     @ResponseBody
-    public Iterable<User> removeUsers(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> userIds) {
+    public List<UserResultModel> removeUsers(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> userIds) {
         securityValidationService.isAdmin(userToken);
 
         // remove user results story
@@ -81,7 +80,7 @@ public class AdminController {
         // delete users
         seq(userIds).forEach(userId -> userDao.delete(userId));
 
-        return userDao.findAll();
+        return quizResultService.getUsers();
     }
 
     @PostMapping(value = "/non/approved")
@@ -105,13 +104,5 @@ public class AdminController {
         );
 
         return quizResultService.nonApproved();
-    }
-
-    @PostMapping(value = "/generate")
-    public String generate(@RequestHeader(value = "X-User-Token") String userToken) {
-        securityValidationService.isAdmin(userToken);
-
-        generateDateService.generate();
-        return "Main quizzes generated.";
     }
 }

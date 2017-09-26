@@ -1,5 +1,6 @@
 package com.griddynamics.gridquiz.common;
 
+import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GenerateDateService {
+    @Autowired
+    private UserDao userDao;
+
     @Autowired
     private AnswerDao answerDao;
 
@@ -25,7 +30,23 @@ public class GenerateDateService {
     @Autowired
     private QuizResultMessageDao messageDao;
 
+    public void initAdmin() {
+        User admin = userDao.findByEmail("admin@hr.com");
+        if (Objects.isNull(admin)) {
+            admin = new User();
+            admin.setName("admin");
+            admin.setEmail("admin@hr.com");
+            admin.setRole(Role.ADMIN);
+            admin.setToken(TokenGenerator.generateToken("admin"));
+            userDao.save(admin);
+        }
+    }
+
     public void generate() {
+        List<Quiz> quizzes = (List<Quiz>) quizDao.findAll();
+        if (!quizzes.isEmpty()) {
+            return;
+        }
 
         //DevOps Technical Quiz
         Answer a;
@@ -590,11 +611,11 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setText("\tdouble wage = 2.0;\t\t// line n1\n" +
-                "\tint weekDays = 5;\n" +
-                "\tlong monthDays = weekDays * 4;\t\t// line n2\n" +
-                "\tlong yearDays = monthDays * 12L;\t\t// line n3\n" +
-                "\tlong totalWage = yearDays * wage;\t\t// line n4\n");
+        q.setText("double wage = 2.0;\t\t\t\t// line n1\n" +
+                "int weekDays = 5;\n" +
+                "long monthDays = weekDays * 4;\t\t\t// line n2\n" +
+                "long yearDays = monthDays * 12L;\t\t// line n3\n" +
+                "long totalWage = yearDays * wage;\t\t// line n4\n");
         q.setTitle("Which modification enables the code to compile ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
@@ -689,10 +710,14 @@ public class GenerateDateService {
                 "boolean c = true;\n" +
                 "if (a == true)\n" +
                 "\tif (b == true)\n" +
-                "\t\tif (c == true) System.out.println(\"Some things are true in this world\");\n" +
-                "\t\telse System.out.println(\"Nothing is true in this world!\");\n" +
-                "\telse if (a && (b = c)) System.out.println(\"It is too confusing to tell what is true and what is false\");\n" +
-                "\t\telse System.out.println(\"Hey this won't compile\");");
+                "\t\tif (c == true)\n" +
+                "\t\t\tSystem.out.println(\"Some things are true in this world\");\n" +
+                "\t\telse\n" +
+                "\t\t\tSystem.out.println(\"Nothing is true in this world!\");\n" +
+                "\telse if (a && (b = c))\n" +
+                "\t\t\tSystem.out.println(\"It is too confusing to tell what is true and what is false\");\n" +
+                "\t\telse\n" +
+                "\t\t\tSystem.out.println(\"Hey this won't compile\");");
         q.setTitle("What will be the result of executing the following code ?");
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
@@ -820,8 +845,7 @@ public class GenerateDateService {
         q = new Question();
         q.setText("public class Ternary {\n" +
                 "\tpublic static void main(String[] args) {\n" +
-                "\t\tint a = 5;\n" +
-                " \n" +
+                "\tint a = 5;\n" +
                 "\t    System.out.println(\"Value is - \" + ((a < 5) ? 9.9 : 9));\n" +
                 "\t}\n" +
                 "}\n");
@@ -874,8 +898,7 @@ public class GenerateDateService {
                 "\t\t\t\t}\n" +
                 "\t \t\tdefault: {\n" +
                 "\t\t\t\tint j = 100;\n" +
-                "\t\t\t\t\t\tSystem.out.println(j);\n" +
-                " \n" +
+                "\t\t\t\tSystem.out.println(j);\n" +
                 "\t\t\t\t}\n" +
                 "\t\t\t}\n" +
                 "\t\t}\n" +
@@ -935,7 +958,7 @@ public class GenerateDateService {
                 " \n" +
                 "\tvoid subclassMethodY()\n" +
                 "\t{\n" +
-                "\t    objY.superclassMethodX();\n" +
+                "\t\tobjY.superclassMethodX();\n" +
                 "\t\tint i;\n" +
                 "\t\ti = objY.superclassVarX;\n" +
                 "\t}\n" +
@@ -1148,7 +1171,7 @@ public class GenerateDateService {
         q = new Question();
         q.setType(Question.Type.INPUT);
         q.setTitle("Grid Labs Challenge #1");
-        q.setText("Stop by our booth and attend Live Demo session at XX:XXpm. Check out the demo of our current projects and fill in the secret phrase provided by a speaker at the end of the session");
+        q.setText("Stop by our booth and attend Live Demo session. Check out the demo of our current projects and fill in the secret phrase provided by a speaker at the end of the session");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
