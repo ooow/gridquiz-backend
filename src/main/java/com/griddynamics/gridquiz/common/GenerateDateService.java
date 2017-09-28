@@ -288,7 +288,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setTitle("Yum package manager is used by which of the Linux distributions (choose all that apply)");
+        q.setTitle("Yum package manager is used by which of the Linux distributions");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -851,8 +851,8 @@ public class GenerateDateService {
         q = new Question();
         q.setText("public class Ternary {\n" +
                 "\tpublic static void main(String[] args) {\n" +
-                "\tint a = 5;\n" +
-                "\t    System.out.println(\"Value is - \" + ((a < 5) ? 9.9 : 9));\n" +
+                "\t\tint a = 5;\n" +
+                "\t\tSystem.out.println(\"Value is - \" + ((a < 5) ? 9.9 : 9));\n" +
                 "\t}\n" +
                 "}\n");
         q.setTitle("What will happen when you attempt to compile and run the following code ?");
@@ -902,9 +902,9 @@ public class GenerateDateService {
                 "\t\t\t\t\tint j = 0;\n" +
                 "\t\t\t\t\tSystem.out.println(j);\n" +
                 "\t\t\t\t}\n" +
-                "\t \t\tdefault: {\n" +
-                "\t\t\t\tint j = 100;\n" +
-                "\t\t\t\tSystem.out.println(j);\n" +
+                "\t\t\t\tdefault: {\n" +
+                "\t\t\t\t\tint j = 100;\n" +
+                "\t\t\t\t\tSystem.out.println(j);\n" +
                 "\t\t\t\t}\n" +
                 "\t\t\t}\n" +
                 "\t\t}\n" +
@@ -1146,7 +1146,7 @@ public class GenerateDateService {
         q = new Question();
         q.setType(Question.Type.INPUT);
         q.setTitle("Code Challenge");
-        q.setText("Find three codes hidden in different parts of the conference hall that start with GDXXXX and insert the numbers in the boxes below");
+        q.setText("Find one code hidden in the conference hall that starts with GDXXXX and insert the numbers in the box below");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);

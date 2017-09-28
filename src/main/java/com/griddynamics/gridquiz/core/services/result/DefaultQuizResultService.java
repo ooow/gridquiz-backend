@@ -136,6 +136,7 @@ public class DefaultQuizResultService implements QuizResultService {
     @Override
     public List<NonApprovedModel> nonApproved() {
         return seq(resultDao.findAllByApproved(false))
+                .filter(r -> Objects.nonNull(r.getEndTime()))
                 .map(r -> new NonApprovedModel(r.getId(), r.getUser().getName(), r.getPoints(), r.getQuiz().getName()))
                 .toList();
     }

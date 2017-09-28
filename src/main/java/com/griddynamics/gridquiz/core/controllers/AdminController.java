@@ -2,7 +2,6 @@ package com.griddynamics.gridquiz.core.controllers;
 
 import com.griddynamics.gridquiz.api.models.NonApprovedModel;
 import com.griddynamics.gridquiz.api.models.UserResultModel;
-import com.griddynamics.gridquiz.common.GenerateDateService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
@@ -34,10 +33,6 @@ public class AdminController {
 
     @Autowired
     private QuizResultService quizResultService;
-
-
-    @Autowired
-    private GenerateDateService generateDateService;
 
     @Autowired
     private SecurityValidationService securityValidationService;

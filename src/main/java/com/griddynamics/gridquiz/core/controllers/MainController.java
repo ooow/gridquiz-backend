@@ -48,6 +48,7 @@ public class MainController {
             return e.getMessage();
         }
 
+        e.printStackTrace();
         return "Internal error.";
     }
 
