@@ -114,7 +114,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setTitle("What is the command in Docker to list all running containers?");
+        q.setTitle("What is the command in Docker to list all running containers ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -141,7 +141,7 @@ public class GenerateDateService {
         answerDao.save(a);
 
         q = new Question();
-        q.setTitle("Playbooks in Ansible are in:");
+        q.setTitle("Playbooks in Ansible are in");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
@@ -453,14 +453,14 @@ public class GenerateDateService {
         questions = new ArrayList<>();
 
         a = new Answer();
-        a.setText("[D, B, C]");
-        a.setCorrectly(false);
+        a.setText("[A, D, B, C]");
+        a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText("[A, D, B, C]");
-        a.setCorrectly(true);
+        a.setText("[D, B, C]");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
@@ -654,6 +654,12 @@ public class GenerateDateService {
         answers.add(a);
         answerDao.save(a);
 
+        a = new Answer();
+        a.setText("Prints 8");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
         q = new Question();
         q.setText("public class Static {\n" +
                 "\tstatic {\n" +
@@ -728,7 +734,7 @@ public class GenerateDateService {
 
         a = new Answer();
         a.setText("15 020");
-        a.setCorrectly(false);
+        a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
@@ -746,7 +752,7 @@ public class GenerateDateService {
 
         a = new Answer();
         a.setText("0 1520");
-        a.setCorrectly(true);
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
@@ -776,8 +782,8 @@ public class GenerateDateService {
                 "\t\tSystem.out.print(v.i + \" \" + i);\n" +
                 "\t}\n" +
                 "}\n");
-        q.setAnswers(answers);
         q.setTitle("Given the following code, what will be the output ?");
+        q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
         questionDao.save(q);
@@ -1075,21 +1081,14 @@ public class GenerateDateService {
 
         a = new Answer();
         a.setText("");
-        a.setTextFieldAnswer("conversational");
+        a.setTextFieldAnswer("conversational user interface");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
         a.setText("");
-        a.setTextFieldAnswer("user");
-        a.setCorrectly(true);
-        answers.add(a);
-        answerDao.save(a);
-
-        a = new Answer();
-        a.setText("");
-        a.setTextFieldAnswer("interface");
+        a.setTextFieldAnswer("conversational, user, interface");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
@@ -1097,7 +1096,7 @@ public class GenerateDateService {
         q = new Question();
         q.setType(Question.Type.INPUT);
         q.setTitle("Blog Challenge");
-        q.setText("Check the first article of ML & AI section of our Tech Blog (https://blog.griddynamics.com/) and type in what stands for CUI in our context");
+        q.setText("Check the first article of ML & AI section of our Tech Blog (https://blog.griddynamics.com/) and guess what stands for CUI in our context. Type in 3 words.");
         q.setAnswers(answers);
         questions.add(q);
         questionDao.save(q);
