@@ -43,15 +43,25 @@ public class GenerateDateService {
     }
 
     public void generate() {
-        List<Quiz> quizzes = (List<Quiz>) quizDao.findAll();
-        if (!quizzes.isEmpty()) {
-            return;
+        if (Objects.isNull(quizDao.findByName("DevOps"))) {
+            //DevOps Technical Quiz
+            generateDevOpsQuiz();
         }
 
-        //DevOps Technical Quiz
+        if (Objects.isNull(quizDao.findByName("Java"))) {
+            // Java Tech Quiz
+            generateJavaQuiz();
+        }
+
+        if (Objects.isNull(quizDao.findByName("General"))) {
+            // General Quiz
+            generateGeneralQuiz();
+        }
+    }
+
+    private void generateDevOpsQuiz() {
         Answer a;
         Question q;
-
 
         ArrayList<Answer> answers = new ArrayList<>();
         ArrayList<Question> questions = new ArrayList<>();
@@ -294,7 +304,6 @@ public class GenerateDateService {
         questions.add(q);
         questionDao.save(q);
 
-
         answers = new ArrayList<>();
 
         a = new Answer();
@@ -376,7 +385,6 @@ public class GenerateDateService {
         questions.add(q);
         questionDao.save(q);
 
-
         answers = new ArrayList<>();
 
         a = new Answer();
@@ -398,7 +406,6 @@ public class GenerateDateService {
         questions.add(q);
         questionDao.save(q);
 
-
         List<Color> colorList = new ArrayList<>();
 
         Color color1 = new Color();
@@ -411,7 +418,6 @@ public class GenerateDateService {
         colorList.add(color2);
         colorDao.save(color2);
 
-
         Quiz quiz = new Quiz();
         quiz.setName("DevOps");
         quiz.setDescription("DevOps Tech Quiz");
@@ -419,7 +425,6 @@ public class GenerateDateService {
         quiz.setQuestions(questions);
         quiz.setColors(colorList);
         quizDao.save(quiz);
-
 
         QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
@@ -446,11 +451,15 @@ public class GenerateDateService {
         messageDao.save(message2);
         messageDao.save(message3);
 
+        System.out.println("Generate Data Service: DevOps Quiz Generated.");
+    }
 
-        // Java Tech Quiz
+    private void generateJavaQuiz() {
+        Answer a;
+        Question q;
 
-        answers = new ArrayList<>();
-        questions = new ArrayList<>();
+        ArrayList<Answer> answers = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<>();
 
         a = new Answer();
         a.setText("[A, D, B, C]");
@@ -1026,8 +1035,7 @@ public class GenerateDateService {
         questions.add(q);
         questionDao.save(q);
 
-
-        colorList = new ArrayList<>();
+        List<Color> colorList = new ArrayList<>();
 
         Color c = new Color();
         c.setCode("#197E92");
@@ -1039,7 +1047,7 @@ public class GenerateDateService {
         colorList.add(c);
         colorDao.save(c);
 
-        quiz = new Quiz();
+        Quiz quiz = new Quiz();
         quiz.setName("Java");
         quiz.setDescription("Java Tech Quiz");
         quiz.setType(Quiz.Type.TEST);
@@ -1048,22 +1056,22 @@ public class GenerateDateService {
         quizDao.save(quiz);
 
 
-        message = new QuizResultMessage();
+        QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
         message.setRate(100);
         message.setMessage("You’re a superhero! You got 100% right! Our team will definitely fall in love with you!");
 
-        message1 = new QuizResultMessage();
+        QuizResultMessage message1 = new QuizResultMessage();
         message1.setQuiz(quiz);
         message1.setRate(60);
         message1.setMessage("Sooooo close. You got more than 60% right! Still, a great job well done");
 
-        message2 = new QuizResultMessage();
+        QuizResultMessage message2 = new QuizResultMessage();
         message2.setQuiz(quiz);
         message2.setRate(30);
         message2.setMessage("Nothing worth having comes easy! You learn, you win, you lose, but you get up. NEVER give up!");
 
-        message3 = new QuizResultMessage();
+        QuizResultMessage message3 = new QuizResultMessage();
         message3.setQuiz(quiz);
         message3.setRate(0);
         message3.setMessage("That was a tough test! But remember, there are no wrong answers, only new lessons! Remain curious and keep learning!");
@@ -1073,187 +1081,206 @@ public class GenerateDateService {
         messageDao.save(message2);
         messageDao.save(message3);
 
+        System.out.println("Generate Data Service: Java Quiz Generated.");
+    }
 
-        // General Quiz
+    private void generateGeneralQuiz() {
+        Answer a;
+        Question q;
 
-        answers = new ArrayList<>();
-        questions = new ArrayList<>();
+        ArrayList<Answer> answers = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<>();
 
         a = new Answer();
-        a.setText("");
-        a.setTextFieldAnswer("conversational user interface");
+        a.setText("Gamedev");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Cloud");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText("");
-        a.setTextFieldAnswer("conversational, user, interface");
-        a.setCorrectly(true);
+        a.setText("ProductDev");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Blog Challenge");
-        q.setText("Check the first article of ML & AI section of our Tech Blog (https://blog.griddynamics.com/) and guess what stands for CUI in our context. Type in 3 words.");
+        q.setTitle("Grid Dynamics is an Exclusive Partner for Lviv IT Arena. Select our technology");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText("GD");
-        a.setTextFieldAnswer("2006");
-        a.setCorrectly(true);
+        a.setText("0000");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText("GD");
-        a.setTextFieldAnswer("bigdata");
-        a.setCorrectly(true);
+        a.setText("0101");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText("GD");
-        a.setTextFieldAnswer("0322420475");
-        a.setCorrectly(true);
-        answers.add(a);
-        answerDao.save(a);
-
-        a = new Answer();
-        a.setText("GD");
-        a.setTextFieldAnswer("GD2006");
-        a.setCorrectly(true);
-        answers.add(a);
-        answerDao.save(a);
-
-        a.setText("GD");
-        a.setTextFieldAnswer("GDBIGDATA");
-        a.setCorrectly(true);
-        answers.add(a);
-        answerDao.save(a);
-
-        a.setText("GD");
-        a.setTextFieldAnswer("GD0322420475");
+        a.setText("2006");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Code Challenge");
-        q.setText("Find one code hidden in the conference hall that starts with GDXXXX and insert the numbers in the box below");
+        q.setTitle("Find one code hidden in the conference hall that starts with GDXXXX and select the correct number from the written code");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText("Artificial Intelligence is the ");
-        a.setTextFieldAnswer("future");
+        a.setText("Past");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Future");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText("Artificial Intelligence is the ");
-        a.setTextFieldAnswer("artificial intelligence is the future");
-        a.setCorrectly(true);
+        a.setText("Problem");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Grid Labs Challenge #1");
-        q.setText("Stop by our booth and attend Live Demo session. Check out the demo of our current projects and fill in the secret phrase provided by a speaker at the end of the session");
+        q.setTitle("Stop by our booth and attend Live Demo session. Complete the secret phrase provided by a speaker at the end of the session: \"Artificial Intelligence is the ...\"");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText("");
-        a.setTextFieldAnswer("machine learning");
+        a.setText("Life");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Learning");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
+        a = new Answer();
+        a.setText("Label");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Grid Labs Challenge #2");
-        q.setText("One of our projects is called ML Sandbox. What does ‘ML’ stand for ?");
+        q.setTitle("One of our projects is called ML Sandbox. What does ‘ML’ stand for? Complete the last word for Machine ...");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText(" as Code");
-        a.setTextFieldAnswer("infrastructure");
+        a.setText("Code");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         a = new Answer();
-        a.setText(" as Code");
-        a.setTextFieldAnswer("infrastructure as code");
-        a.setCorrectly(true);
+        a.setText("Cake");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Calculation");
+        a.setCorrectly(false);
         answers.add(a);
         answerDao.save(a);
 
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Grid Dynamics Meetup Challenge");
-        q.setText("Check the Grid Dynamics meetup topics on October 1 and complete one of the topics below with a proper word");
+        q.setTitle("Check the Grid Dynamics meetup topics on October 1 and complete one of the topics with a proper word: Infrastructure as ...");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText("http://www.facebook.com/GridDynamics.");
-        a.setTextFieldAnswer("ukraine");
+        a.setText("GDLviv");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("UkraineGD");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Ukraine");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Social Media Challenge");
-        q.setText("Find us on Facebook and complete the link below");
+        q.setTitle("Find us on Facebook and complete the link below http://www.facebook.com/GridDynamics.");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
         answers = new ArrayList<>();
 
         a = new Answer();
-        a.setText("");
-        a.setTextFieldAnswer("cloud");
+        a.setText("Interface");
         a.setCorrectly(true);
         answers.add(a);
         answerDao.save(a);
 
+        a = new Answer();
+        a.setText("Infrastructure");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
+        a = new Answer();
+        a.setText("Information");
+        a.setCorrectly(false);
+        answers.add(a);
+        answerDao.save(a);
+
         q = new Question();
-        q.setType(Question.Type.INPUT);
-        q.setTitle("Grid Dynamics Booth Challenge");
-        q.setText("Stop by our booth and reach out to one of the members, he/she will tell you a secret word to insert below");
+        q.setTitle("Check out our Tech Blog (blog.griddynamics.com) and type in what stands for CUI in our context. Select the right answer below for Conversational User ... (CUI)");
         q.setAnswers(answers);
+        q.setType(Question.Type.TEXT);
         questions.add(q);
         questionDao.save(q);
 
+        List<Color> colorList = new ArrayList<>();
 
-        colorList = new ArrayList<>();
-
-        c = new Color();
+        Color c = new Color();
         c.setCode("#508721");
         colorList.add(c);
         colorDao.save(c);
@@ -1263,32 +1290,30 @@ public class GenerateDateService {
         colorList.add(c);
         colorDao.save(c);
 
-
-        quiz = new Quiz();
+        Quiz quiz = new Quiz();
         quiz.setName("General");
         quiz.setDescription("General Quiz");
-        quiz.setType(Quiz.Type.QUIZ);
+        quiz.setType(Quiz.Type.TEST);
         quiz.setQuestions(questions);
         quiz.setColors(colorList);
         quizDao.save(quiz);
 
-
-        message = new QuizResultMessage();
+        QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
         message.setRate(100);
         message.setMessage("You’re a superhero! You got 100% right! Our team will definitely fall in love with you!");
 
-        message1 = new QuizResultMessage();
+        QuizResultMessage message1 = new QuizResultMessage();
         message1.setQuiz(quiz);
         message1.setRate(60);
         message1.setMessage("Sooooo close. You got more than 60% right! Still, a great job well done");
 
-        message2 = new QuizResultMessage();
+        QuizResultMessage message2 = new QuizResultMessage();
         message2.setQuiz(quiz);
         message2.setRate(30);
         message2.setMessage("Nothing worth having comes easy! You learn, you win, you lose, but you get up. NEVER give up!");
 
-        message3 = new QuizResultMessage();
+        QuizResultMessage message3 = new QuizResultMessage();
         message3.setQuiz(quiz);
         message3.setRate(0);
         message3.setMessage("That was a tough test! But remember, there are no wrong answers, only new lessons! Remain curious and keep learning!");
@@ -1297,5 +1322,7 @@ public class GenerateDateService {
         messageDao.save(message1);
         messageDao.save(message2);
         messageDao.save(message3);
+
+        System.out.println("Generate Data Service: General Quiz Generated.");
     }
 }
