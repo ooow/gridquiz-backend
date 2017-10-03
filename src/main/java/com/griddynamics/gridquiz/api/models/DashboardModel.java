@@ -13,6 +13,10 @@ public class DashboardModel {
     String quizName;
     List<DashboardResultModel> results;
 
+    @Getter
+    @Setter
+    @ToString
+    @EqualsAndHashCode
     @AllArgsConstructor
     public static class DashboardResultModel {
         public String position;

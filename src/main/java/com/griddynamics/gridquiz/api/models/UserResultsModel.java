@@ -1,6 +1,7 @@
 package com.griddynamics.gridquiz.api.models;
 
 import com.griddynamics.gridquiz.repository.models.User;
+import com.griddynamics.gridquiz.repository.models.UserResult;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class UserResultModel {
+public class UserResultsModel {
     private User user;
-    private List<DashboardModel.DashboardResultModel> results;
+    private List<UserResult> results;
 }

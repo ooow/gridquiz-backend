@@ -1,9 +1,6 @@
 package com.griddynamics.gridquiz.core.services.result;
 
-import com.griddynamics.gridquiz.api.models.DashboardModel;
-import com.griddynamics.gridquiz.api.models.NonApprovedModel;
-import com.griddynamics.gridquiz.api.models.UserAnswersModel;
-import com.griddynamics.gridquiz.api.models.UserResultModel;
+import com.griddynamics.gridquiz.api.models.*;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.*;
@@ -142,7 +139,7 @@ public class DefaultQuizResultService implements QuizResultService {
     }
 
     @Override
-    public List<UserResultModel> getUsers() {
+    public List<UserDashboardResultModel> getUsers() {
         return seq(userDao.findAllByRole(Role.USER))
                 .map(u -> {
                     List<DashboardModel.DashboardResultModel> drm = seq(resultDao.findByUser(u))
@@ -154,8 +151,15 @@ public class DefaultQuizResultService implements QuizResultService {
                                     )
                             ).toList();
 
-                    return new UserResultModel(u, drm);
+                    return new UserDashboardResultModel(u, drm);
                 })
+                .toList();
+    }
+
+    @Override
+    public List<UserResultsModel> getUserResults() {
+        return seq(userDao.findAllByRole(Role.USER))
+                .map(u -> new UserResultsModel(u, seq(resultDao.findByUser(u)).toList()))
                 .toList();
     }
 
@@ -163,10 +167,14 @@ public class DefaultQuizResultService implements QuizResultService {
         return getResultTime(r1.getStartTime(), r1.getEndTime()) <= getResultTime(r2.getStartTime(), r2.getEndTime());
     }
 
-    private long getResultTime(LocalDateTime t1, LocalDateTime t2) {
+    public static long getResultTime(LocalDateTime t1, LocalDateTime t2) {
         if (Objects.nonNull(t1) && Objects.nonNull(t2))
             return Duration.between(t1, t2).toMillis();
         return -1;
+    }
+
+    public static String toMinutes(long milliseconds) {
+        return (int) ((milliseconds / (1000 * 60)) % 60) + ":" + (int) (milliseconds / 1000) % 60;
     }
 
     private QuizResultMessage getMessageForQuiz(Quiz quiz, int points) {

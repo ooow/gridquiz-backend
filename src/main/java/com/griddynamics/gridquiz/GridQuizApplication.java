@@ -1,6 +1,6 @@
 package com.griddynamics.gridquiz;
 
-import com.griddynamics.gridquiz.common.GenerateDateService;
+import com.griddynamics.gridquiz.core.services.common.GenerateDateService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

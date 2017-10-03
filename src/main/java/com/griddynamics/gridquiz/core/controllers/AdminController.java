@@ -1,9 +1,11 @@
 package com.griddynamics.gridquiz.core.controllers;
 
 import com.griddynamics.gridquiz.api.models.NonApprovedModel;
-import com.griddynamics.gridquiz.api.models.UserResultModel;
+import com.griddynamics.gridquiz.api.models.UserDashboardResultModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
+import com.griddynamics.gridquiz.core.services.ReportService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
+import com.griddynamics.gridquiz.core.services.common.FileDownload;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
 import com.griddynamics.gridquiz.repository.QuizDao;
 import com.griddynamics.gridquiz.repository.ResultDao;
@@ -13,6 +15,9 @@ import com.griddynamics.gridquiz.repository.models.UserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.jooq.lambda.Seq.seq;
@@ -37,6 +42,9 @@ public class AdminController {
     @Autowired
     private SecurityValidationService securityValidationService;
 
+    @Autowired
+    private ReportService reportService;
+
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e) {
@@ -59,7 +67,7 @@ public class AdminController {
 
     @PostMapping(value = "/users")
     @ResponseBody
-    public List<UserResultModel> getUsers(@RequestHeader(value = "X-User-Token") String userToken) {
+    public List<UserDashboardResultModel> getUsers(@RequestHeader(value = "X-User-Token") String userToken) {
         securityValidationService.isAdmin(userToken);
 
         return quizResultService.getUsers();
@@ -67,7 +75,7 @@ public class AdminController {
 
     @PostMapping(value = "/users/remove")
     @ResponseBody
-    public List<UserResultModel> removeUsers(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> userIds) {
+    public List<UserDashboardResultModel> removeUsers(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> userIds) {
         securityValidationService.isAdmin(userToken);
 
         // remove user results story
@@ -99,5 +107,17 @@ public class AdminController {
         );
 
         return quizResultService.nonApproved();
+    }
+
+    @GetMapping(value = "/download/report")
+    public void downloadReport(@RequestHeader(value = "X-User-Token") String userToken, HttpServletResponse response) throws IOException {
+        securityValidationService.isAdmin(userToken);
+
+        FileDownload.newFileDownload()
+                .withData(reportService.generateReport())
+                .withFileName("GridQuiz Report " + LocalDate.now() + ".xlsx")
+                .applyToResponse(response)
+                .withXlsxContentType()
+                .send();
     }
 }

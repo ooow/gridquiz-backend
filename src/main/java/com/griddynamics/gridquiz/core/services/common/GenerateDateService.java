@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.common;
+package com.griddynamics.gridquiz.core.services.common;
 
 import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
 import com.griddynamics.gridquiz.repository.*;
