@@ -1,6 +1,11 @@
 package com.griddynamics.gridquiz.core.services.result;
 
-import com.griddynamics.gridquiz.api.models.*;
+import com.griddynamics.gridquiz.api.models.common.NonApprovedModel;
+import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
+import com.griddynamics.gridquiz.api.models.dashboard.DashboardResultModel;
+import com.griddynamics.gridquiz.api.models.user.UserAnswersModel;
+import com.griddynamics.gridquiz.api.models.user.UserDashboardResultModel;
+import com.griddynamics.gridquiz.api.models.user.UserResultsModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.*;
 import com.griddynamics.gridquiz.repository.models.*;
@@ -10,8 +15,9 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
+import static java.util.Objects.nonNull;
 import static org.jooq.lambda.Seq.seq;
 
 @Service
@@ -45,8 +51,7 @@ public class DefaultQuizResultService implements QuizResultService {
                 .findFirst()
                 .orElse(null);
 
-        if (Objects.nonNull(result)) {
-
+        if (nonNull(result)) {
             int points;
             if (Quiz.Type.QUIZ.equals(quiz.getType())) {
                 points = Math.toIntExact(
@@ -78,17 +83,13 @@ public class DefaultQuizResultService implements QuizResultService {
     @Override
     public void startQuiz(Long quizId, String userToken) {
         Quiz quiz = quizDao.findOne(quizId);
-        UserResult result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
-                .filter(r -> r.getQuiz().equals(quiz))
-                .findFirst()
-                .orElse(null);
-        if (Objects.isNull(result)) {
-            result = new UserResult();
-            result.setUser(userDao.findByToken(userToken));
-            result.setQuiz(quiz);
-            result.setStartTime(LocalDateTime.now());
-
-            resultDao.save(result);
+        Optional<UserResult> result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
+                .findFirst(r -> r.getQuiz().equals(quiz));
+        if (!result.isPresent()) {
+            resultDao.save(UserResult.builder()
+                    .user(userDao.findByToken(userToken))
+                    .quiz(quiz)
+                    .startTime(LocalDateTime.now()).build());
         }
     }
 
@@ -97,7 +98,6 @@ public class DefaultQuizResultService implements QuizResultService {
         return seq(quizDao.findAll())
                 .map(q -> {
                             List<UserResult> top = resultDao.findTop5ByQuizAndApprovedOrderByPointsDesc(q, true);
-
                             top.sort((r1, r2) -> {
                                 if (r1.getPoints() > r2.getPoints()) {
                                     return -1;
@@ -115,17 +115,17 @@ public class DefaultQuizResultService implements QuizResultService {
                                 return 0;
                             });
 
-
-                            return new DashboardModel(q.getName(),
-                                    seq(top).zipWithIndex()
-                                            .map(r -> new DashboardModel.DashboardResultModel(
-                                                    String.valueOf(r.v2),
-                                                            r.v1.getUser().getName(),
-                                                            String.valueOf(r.v1.getPoints()),
-                                                            String.valueOf(getResultTime(r.v1.getStartTime(), r.v1.getEndTime()))
-                                                    )
-                                            ).toList()
-                            );
+                    return DashboardModel.builder()
+                            .quizName(q.getName())
+                            .results(seq(top).zipWithIndex()
+                                    .map(r -> DashboardResultModel.builder()
+                                            .position(String.valueOf(r.v2))
+                                            .name(r.v1.getUser().getName())
+                                            .result(String.valueOf(r.v1.getPoints()))
+                                            .time(String.valueOf(getResultTime(r.v1.getStartTime(), r.v1.getEndTime())))
+                                            .build())
+                                    .toList())
+                            .build();
                         }
                 ).toList();
     }
@@ -133,33 +133,40 @@ public class DefaultQuizResultService implements QuizResultService {
     @Override
     public List<NonApprovedModel> nonApproved() {
         return seq(resultDao.findAllByApproved(false))
-                .filter(r -> Objects.nonNull(r.getEndTime()))
-                .map(r -> new NonApprovedModel(r.getId(), r.getUser().getName(), r.getPoints(), r.getQuiz().getName()))
+                .filter(r -> nonNull(r.getEndTime()))
+                .map(r -> NonApprovedModel.builder()
+                        .id(r.getId())
+                        .name(r.getUser().getName())
+                        .points(r.getPoints())
+                        .quizName(r.getQuiz().getName())
+                        .build())
                 .toList();
     }
 
     @Override
     public List<UserDashboardResultModel> getUsers() {
         return seq(userDao.findAllByRole(Role.USER))
-                .map(u -> {
-                    List<DashboardModel.DashboardResultModel> drm = seq(resultDao.findByUser(u))
-                            .map(r -> new DashboardModel.DashboardResultModel(
-                                            r.getQuiz().getName(),
-                                            r.getUser().getName(),
-                                            String.valueOf(r.getPoints()),
-                                            String.valueOf(getResultTime(r.getStartTime(), r.getEndTime()))
-                                    )
-                            ).toList();
-
-                    return new UserDashboardResultModel(u, drm);
-                })
+                .map(u -> UserDashboardResultModel.builder()
+                        .user(u)
+                        .results(seq(resultDao.findByUser(u))
+                                .map(r -> DashboardResultModel.builder()
+                                        .position(r.getQuiz().getName())
+                                        .name(r.getUser().getName())
+                                        .result(String.valueOf(r.getPoints()))
+                                        .time(String.valueOf(getResultTime(r.getStartTime(), r.getEndTime())))
+                                        .build())
+                                .toList())
+                        .build())
                 .toList();
     }
 
     @Override
     public List<UserResultsModel> getUserResults() {
         return seq(userDao.findAllByRole(Role.USER))
-                .map(u -> new UserResultsModel(u, seq(resultDao.findByUser(u)).toList()))
+                .map(u -> UserResultsModel.builder()
+                        .user(u)
+                        .results(resultDao.findByUser(u))
+                        .build())
                 .toList();
     }
 
@@ -168,7 +175,7 @@ public class DefaultQuizResultService implements QuizResultService {
     }
 
     public static long getResultTime(LocalDateTime t1, LocalDateTime t2) {
-        if (Objects.nonNull(t1) && Objects.nonNull(t2))
+        if (nonNull(t1) && nonNull(t2))
             return Duration.between(t1, t2).toMillis();
         return -1;
     }
@@ -183,8 +190,7 @@ public class DefaultQuizResultService implements QuizResultService {
         double percent = (points * 100) / quiz.getQuestions().size();
 
         return seq(messages)
-                .filter(message -> percent >= message.getRate())
-                .findFirst()
+                .findFirst(message -> percent >= message.getRate())
                 .orElseGet(null);
     }
 }

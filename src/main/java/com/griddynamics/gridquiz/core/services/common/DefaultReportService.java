@@ -1,6 +1,6 @@
 package com.griddynamics.gridquiz.core.services.common;
 
-import com.griddynamics.gridquiz.api.models.UserResultsModel;
+import com.griddynamics.gridquiz.api.models.user.UserResultsModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.ReportService;
 import org.apache.poi.ss.usermodel.BorderStyle;

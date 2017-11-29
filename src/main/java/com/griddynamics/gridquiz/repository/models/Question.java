@@ -1,21 +1,18 @@
 package com.griddynamics.gridquiz.repository.models;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "questions")
 public class Question implements Identifiable<Long> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,8 +36,4 @@ public class Question implements Identifiable<Long> {
     @OneToMany
     @JoinColumn
     private List<Answer> answers;
-
-    public Long getId() {
-        return id;
-    }
 }

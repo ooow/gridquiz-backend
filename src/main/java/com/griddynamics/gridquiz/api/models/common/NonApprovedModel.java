@@ -1,12 +1,10 @@
-package com.griddynamics.gridquiz.api.models;
+package com.griddynamics.gridquiz.api.models.common;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
+@Data
+@Builder
 public class NonApprovedModel {
     private Long id;
     private String name;

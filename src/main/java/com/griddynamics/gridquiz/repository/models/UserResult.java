@@ -1,22 +1,21 @@
 package com.griddynamics.gridquiz.repository.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "user_results")
 public class UserResult implements Identifiable<Long> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

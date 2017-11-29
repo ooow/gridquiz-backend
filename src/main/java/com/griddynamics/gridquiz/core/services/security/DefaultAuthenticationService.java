@@ -7,7 +7,7 @@ import com.griddynamics.gridquiz.repository.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import static java.util.Optional.ofNullable;
 
 @Service
 public class DefaultAuthenticationService implements AuthenticationService {
@@ -17,22 +17,18 @@ public class DefaultAuthenticationService implements AuthenticationService {
 
     @Override
     public User authUser(User user) {
-        User authUser = null;
-        if (!"".equals(user.getPhone())) {
-            authUser = userDao.findByPhone(user.getPhone());
+        User authUser;
+        if (!user.getPhone().isEmpty()) {
+            authUser = ofNullable(userDao.findByPhone(user.getPhone())).orElse(registerUser(user));
+        } else {
+            authUser = ofNullable(userDao.findByEmail(user.getEmail())).orElse(registerUser(user));
         }
-        if (Objects.isNull(authUser)) {
-            if (!"".equals(user.getEmail())) {
-                authUser = userDao.findByEmail(user.getEmail());
-            }
-            if (Objects.isNull(authUser)) {
-                authUser = registerUser(user);
-            }
-            if (Role.ADMIN.equals(authUser.getRole())) {
-                authUser.setToken(TokenGenerator.generateToken("eooYPagGx2"));
-                userDao.save(authUser);
-            }
+
+        if (Role.ADMIN.equals(authUser.getRole())) {
+            authUser.setToken(TokenGenerator.generateToken("eooYPagGx2"));
+            userDao.save(authUser);
         }
+
         return authUser;
     }
 
@@ -40,18 +36,13 @@ public class DefaultAuthenticationService implements AuthenticationService {
         if ("admin".equals(user.getName())) {
             return user;
         }
-        User authUser = new User();
-
-        authUser.setName(user.getName());
-        if (!"".equals(user.getEmail())) {
-            authUser.setEmail(user.getEmail());
-        }
-        if (!"".equals(user.getPhone())) {
-            authUser.setPhone(user.getPhone());
-        }
-        authUser.setRole(Role.USER);
-        String username = user.getEmail() + user.getPhone();
-        authUser.setToken(TokenGenerator.generateToken(username));
+        User authUser = User.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .role(Role.USER)
+                .token(TokenGenerator.generateToken(String.format("%s%s", user.getEmail(), user.getPhone())))
+                .build();
         userDao.save(authUser);
 
         return authUser;

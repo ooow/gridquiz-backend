@@ -1,16 +1,14 @@
-package com.griddynamics.gridquiz.api.models;
+package com.griddynamics.gridquiz.api.models.user;
 
 import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
+@Data
+@Builder
 public class UserResultsModel {
     private User user;
     private List<UserResult> results;

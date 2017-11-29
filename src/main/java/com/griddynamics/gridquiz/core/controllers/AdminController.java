@@ -1,7 +1,7 @@
 package com.griddynamics.gridquiz.core.controllers;
 
-import com.griddynamics.gridquiz.api.models.NonApprovedModel;
-import com.griddynamics.gridquiz.api.models.UserDashboardResultModel;
+import com.griddynamics.gridquiz.api.models.common.NonApprovedModel;
+import com.griddynamics.gridquiz.api.models.user.UserDashboardResultModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.ReportService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
@@ -62,7 +62,7 @@ public class AdminController {
         securityValidationService.isAdmin(userToken);
 
         quizDao.save(quiz);
-        return "Quiz " + quiz.getName() + " created";
+        return String.format("Quiz %s created", quiz.getName());
     }
 
     @PostMapping(value = "/users")
@@ -115,7 +115,7 @@ public class AdminController {
 
         FileDownload.newFileDownload()
                 .withData(reportService.generateReport())
-                .withFileName("GridQuiz Report " + LocalDate.now() + ".xlsx")
+                .withFileName(String.format("GridQuiz Report %s.xlsx", LocalDate.now()))
                 .applyToResponse(response)
                 .withXlsxContentType()
                 .send();

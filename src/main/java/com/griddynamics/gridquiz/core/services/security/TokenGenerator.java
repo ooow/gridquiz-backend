@@ -8,6 +8,6 @@ public class TokenGenerator {
     public static String generateToken(String username) {
         long longToken = Math.abs(random.nextLong());
         String random = Long.toString(longToken, 16);
-        return (username + "tr" + random);
+        return String.format("%s+tr%s", username, random);
     }
 }
