@@ -1,12 +1,10 @@
-package com.griddynamics.gridquiz.core.services.common;
+package com.griddynamics.gridquiz.core.service.report;
 
-import org.apache.commons.io.IOUtils;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 
 public class FileDownload {
     public static IData newFileDownload() {

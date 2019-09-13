@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.services;
+package com.griddynamics.gridquiz.core.service.report;
 
 import java.io.IOException;
 

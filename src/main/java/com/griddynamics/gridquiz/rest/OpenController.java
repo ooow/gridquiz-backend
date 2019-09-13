@@ -1,11 +1,8 @@
 package com.griddynamics.gridquiz.rest;
 
-import static org.jooq.lambda.Seq.seq;
-
-import com.griddynamics.gridquiz.api.models.common.MiniQuizzesModel;
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
-import com.griddynamics.gridquiz.core.services.QuizResultService;
-import com.griddynamics.gridquiz.repository.QuizRepository;
+import com.griddynamics.gridquiz.core.service.quiz.QuizService;
+import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,27 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class OpenController {
 
     @Autowired
-    private QuizRepository quizRepository;
-
-    @Autowired
-    private QuizResultService quizResultService;
+    private QuizService quizService;
 
     @GetMapping(value = "/quizzes")
     @ResponseBody
-    public List<MiniQuizzesModel> quizzes() {
-        return seq(quizRepository.findAll()).map(q -> MiniQuizzesModel.builder()
-                .id(q.getId())
-                .name(q.getName())
-                .description(q.getDescription())
-                .colors(q.getColors())
-                .questionsSize(q.getQuestions().size())
-                .questionsComplete(0)
-                .build()).toList();
+    public List<MiniQuiz> quizzes() {
+        return quizService.getAllMiniQuizzes();
     }
 
     @GetMapping(value = "/dashboard")
     @ResponseBody
     public List<DashboardModel> dashboard() {
-        return quizResultService.generateDashboard();
+        return null; //quizResultService.generateDashboard();
     }
 }

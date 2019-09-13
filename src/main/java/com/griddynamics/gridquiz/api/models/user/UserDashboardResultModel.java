@@ -1,11 +1,10 @@
 package com.griddynamics.gridquiz.api.models.user;
 
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardResultModel;
-import com.griddynamics.gridquiz.repository.models.User;
+import com.griddynamics.gridquiz.repository.model.User;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Builder

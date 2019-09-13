@@ -1,5 +1,6 @@
-package com.griddynamics.gridquiz.repository.models;
+package com.griddynamics.gridquiz.repository.model;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,17 +11,11 @@ import org.springframework.data.annotation.Id;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Quiz {
     @Id
     private String id;
-
     private String name;
-
-    private String email;
-
-    private String phone;
-
-    private Role role;
-
-    private String token;
+    private String description;
+    private List<String> colors;
+    private List<Question> questions;
 }

@@ -1,19 +1,23 @@
 package com.griddynamics.gridquiz.repository;
 
-import com.griddynamics.gridquiz.repository.models.Quiz;
-import com.griddynamics.gridquiz.repository.models.User;
-import com.griddynamics.gridquiz.repository.models.UserResult;
+import com.griddynamics.gridquiz.repository.model.Result;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ResultRepository extends MongoRepository<UserResult, String> {
-    List<UserResult> removeByUser(User user);
+public interface ResultRepository extends MongoRepository<Result, String> {
+    Optional<List<Result>> findAllByApproved(boolean approved);
 
-    List<UserResult> findByQuiz(Quiz quiz);
+    Optional<List<Result>> findByQuizId(String quizId);
 
-    List<UserResult> findByUser(User user);
+    Optional<List<Result>> findByUserId(String userId);
 
-    List<UserResult> findTop5ByQuizAndApprovedOrderByPointsDesc(Quiz quiz, boolean approved);
+    Optional<Result> findFirstByUserIdAndQuizId(String userId, String quizId);
 
-    List<UserResult> findAllByApproved(boolean approved);
+    Optional<List<Result>> findTop5ByQuizIdAndApprovedOrderByPointsDesc(String quizId,
+                                                                        boolean approved);
+
+    Optional<List<Result>> removeByQuizId(String quizId);
+
+    Optional<List<Result>> removeByUserId(String userId);
 }

@@ -1,7 +1,7 @@
 package com.griddynamics.gridquiz.rest.auth;
 
-import com.griddynamics.gridquiz.core.services.AuthenticationService;
-import com.griddynamics.gridquiz.repository.models.User;
+import com.griddynamics.gridquiz.repository.UserRepository;
+import com.griddynamics.gridquiz.repository.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private UserRepository userRepository;
 
     @PostMapping(value = "/user")
     @ResponseBody
     public User authUser(@RequestBody User user) {
-        return authenticationService.authorize(user);
+        // TODO: Implement authorization.
+        return userRepository.findByEmail(user.getEmail()).orElse(userRepository.save(user));
     }
 }

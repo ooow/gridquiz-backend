@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.repository.models;
+package com.griddynamics.gridquiz.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
@@ -12,22 +12,15 @@ import org.springframework.data.annotation.Id;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResult {
+public class Result {
     @Id
-    private String id;
-
-    private User user;
-
     @JsonIgnore
-    private Quiz quiz;
-
-    private int points;
-
+    private String id;
+    @JsonIgnore
+    private String userId;
+    private String quizId;
     private LocalDateTime startTime;
-
     private LocalDateTime endTime;
-
+    private long points;
     private boolean approved;
-
-    private QuizResultMessage comment;
 }

@@ -1,18 +1,16 @@
-package com.griddynamics.gridquiz.api.models.common;
+package com.griddynamics.gridquiz.rest.model;
 
-import com.griddynamics.gridquiz.repository.models.Color;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-
-public class MiniQuizzesModel {
+public class MiniQuiz {
     private String id;
     private String name;
     private String description;
-    private List<Color> colors;
+    private List<String> colors;
     private int questionsSize;
     private int questionsComplete;
     private boolean attempt;

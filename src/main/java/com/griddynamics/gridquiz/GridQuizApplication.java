@@ -1,13 +1,11 @@
 package com.griddynamics.gridquiz;
 
-import com.griddynamics.gridquiz.repository.AnswerRepository;
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
-import com.griddynamics.gridquiz.repository.models.Answer;
-import com.griddynamics.gridquiz.repository.models.Color;
-import com.griddynamics.gridquiz.repository.models.Question;
-import com.griddynamics.gridquiz.repository.models.Quiz;
-import java.util.ArrayList;
+import com.griddynamics.gridquiz.repository.ResultRepository;
+import com.griddynamics.gridquiz.repository.UserRepository;
+import com.griddynamics.gridquiz.repository.model.Question;
+import com.griddynamics.gridquiz.repository.model.Quiz;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,7 +22,10 @@ public class GridQuizApplication implements CommandLineRunner {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private AnswerRepository answerRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ResultRepository resultRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(GridQuizApplication.class, args);
@@ -33,54 +34,32 @@ public class GridQuizApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         quizRepository.deleteAll();
+        userRepository.deleteAll();
         questionRepository.deleteAll();
-        answerRepository.deleteAll();
+        resultRepository.deleteAll();
         init();
     }
 
     private void init() {
-        List<Answer> answersOne = List.of(Answer.builder().text("Culture").correctly(true).build(),
-                                          Answer.builder().text("Role").correctly(false).build(),
-                                          Answer.builder().text("Team").correctly(false).build(),
-                                          Answer.builder()
-                                                  .text("Application")
-                                                  .correctly(false)
-                                                  .build());
-        List<Answer> answersTwo =
-                List.of(Answer.builder().text("docker list").correctly(false).build(),
-                        Answer.builder().text("docker containers list").correctly(false).build(),
-                        Answer.builder().text("docker ps").correctly(true).build(),
-                        Answer.builder().text("docker list cs").correctly(false).build());
+        Question one = Question.builder()
+                .title("DevOps is")
+                .answers(List.of("Culture", "Role", "Team", "Application"))
+                .correctAnswer("Culture")
+                .build();
 
-        List<Question> questions = List.of(Question.builder()
-                                                   .title("DevOps is")
-                                                   .type(Question.Type.TEXT)
-                                                   .answers(answersOne)
-                                                   .build(), Question.builder()
-                                                   .title("What is the command in Docker to list all running containers?")
-                                                   .type(Question.Type.TEXT)
-                                                   .answers(answersTwo)
-                                                   .build());
+        Question two = Question.builder()
+                .title("What is the command in Docker to list all running containers?")
+                .answers(List.of("docker list", "docker containers list", "docker ps",
+                                 "docker list cs"))
+                .correctAnswer("docker ps")
+                .build();
+        List<Question> questions = List.of(one, two);
 
-        List<Color> colorList = new ArrayList<>();
-
-        Color color1 = new Color();
-        color1.setCode("#B66D18");
-        colorList.add(color1);
-
-        Color color2 = new Color();
-        color2.setCode("#984E03");
-        colorList.add(color2);
-
-        answerRepository.saveAll(answersOne);
-        answerRepository.saveAll(answersTwo);
         questionRepository.saveAll(questions);
         quizRepository.save(Quiz.builder()
                                     .name("DevOps")
                                     .description("DevOps Tech Quiz")
-                                    .type(Quiz.Type.TEST)
-                                    .questions(questions)
-                                    .colors(colorList)
+                                    .questions(questions).colors(List.of("#B66D18", "#984E03"))
                                     .build());
 
         System.out.println("Generate Data Service: DevOps Quiz Generated.");
