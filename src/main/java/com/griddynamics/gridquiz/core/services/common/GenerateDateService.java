@@ -1,12 +1,12 @@
 package com.griddynamics.gridquiz.core.services.common;
 
 import com.griddynamics.gridquiz.core.services.security.TokenGenerator;
-import com.griddynamics.gridquiz.repository.AnswerDao;
-import com.griddynamics.gridquiz.repository.ColorDao;
-import com.griddynamics.gridquiz.repository.QuestionDao;
+import com.griddynamics.gridquiz.repository.AnswerRepository;
+import com.griddynamics.gridquiz.repository.ColorRepository;
+import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
-import com.griddynamics.gridquiz.repository.QuizResultMessageDao;
-import com.griddynamics.gridquiz.repository.UserDao;
+import com.griddynamics.gridquiz.repository.QuizResultMessageRepository;
+import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.models.Answer;
 import com.griddynamics.gridquiz.repository.models.Color;
 import com.griddynamics.gridquiz.repository.models.Question;
@@ -23,47 +23,47 @@ import org.springframework.stereotype.Service;
 @Service
 public class GenerateDateService {
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
-    private AnswerDao answerDao;
+    private AnswerRepository answerRepository;
 
     @Autowired
-    private QuestionDao questionDao;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    private QuizRepository quizDao;
+    private QuizRepository quizRepository;
 
     @Autowired
-    private ColorDao colorDao;
+    private ColorRepository colorRepository;
 
     @Autowired
-    private QuizResultMessageDao messageDao;
+    private QuizResultMessageRepository messageRepository;
 
     public void initAdmin() {
-        User admin = userDao.findByEmail("admin@hr.com");
+        User admin = userRepository.findByEmail("admin@hr.com");
         if (Objects.isNull(admin)) {
             admin = new User();
             admin.setName("admin");
             admin.setEmail("admin@hr.com");
             admin.setRole(Role.ADMIN);
             admin.setToken(TokenGenerator.generateToken("admin"));
-            userDao.save(admin);
+            userRepository.save(admin);
         }
     }
 
     public void generate() {
-        if (Objects.isNull(quizDao.findByName("DevOps"))) {
+        if (Objects.isNull(quizRepository.findByName("DevOps"))) {
             //DevOps Technical Quiz
             generateDevOpsQuiz();
         }
 
-        if (Objects.isNull(quizDao.findByName("Java"))) {
+        if (Objects.isNull(quizRepository.findByName("Java"))) {
             // Java Tech Quiz
             generateJavaQuiz();
         }
 
-        if (Objects.isNull(quizDao.findByName("General"))) {
+        if (Objects.isNull(quizRepository.findByName("General"))) {
             // General Quiz
             generateGeneralQuiz();
         }
@@ -80,32 +80,32 @@ public class GenerateDateService {
         a.setText("Culture");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Role");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Team");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Application");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("DevOps is");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -113,32 +113,32 @@ public class GenerateDateService {
         a.setText("docker list");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("docker containers list");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("docker ps");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("docker list cs");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("What is the command in Docker to list all running containers ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -146,26 +146,26 @@ public class GenerateDateService {
         a.setText("HCL");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("JSON");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("YAML");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Playbooks in Ansible are in");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -173,26 +173,26 @@ public class GenerateDateService {
         a.setText("Chef");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Salt");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Pepper");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Which one of followings is NOT a CMT (Configuration Management Tool)");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -200,20 +200,20 @@ public class GenerateDateService {
         a.setText("True");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("False");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Cloudformation Templates are simple JSON-formatted text files");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -221,26 +221,26 @@ public class GenerateDateService {
         a.setText("ENTRYPOINT and FROM");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("FROM and MAINTAINER");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("USER and FROM");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Name two commands that cannot be triggered by the ONBUILD docker command");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -248,32 +248,32 @@ public class GenerateDateService {
         a.setText("DevOps looks to extend Dev into Production");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("DevOps looks to embed Development into IT Operations");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("DevOps looks to embed IT Operations into Development");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("All of the above");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Which of these statements are true");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -281,38 +281,38 @@ public class GenerateDateService {
         a.setText("Debian");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Ubuntu");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Red Hat");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Gentoo");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Arch");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Yum package manager is used by which of the Linux distributions");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -320,13 +320,13 @@ public class GenerateDateService {
         a.setText("True");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("False");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -334,7 +334,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -342,19 +342,19 @@ public class GenerateDateService {
         a.setText("On-Demand Instances");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Spot Instances");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Reserved Instances");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -362,7 +362,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -370,25 +370,25 @@ public class GenerateDateService {
         a.setText("8 SSL Certificates");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("4 SSL Certificates");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("2 SSL Certificates");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("1 SSL Certificates");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -396,7 +396,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -404,32 +404,32 @@ public class GenerateDateService {
         a.setText("True");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("False");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("Does AWS VPC Peering support Transitive Peering - True or False ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         List<Color> colorList = new ArrayList<>();
 
         Color color1 = new Color();
         color1.setCode("#B66D18");
         colorList.add(color1);
-        colorDao.save(color1);
+        colorRepository.save(color1);
 
         Color color2 = new Color();
         color2.setCode("#984E03");
         colorList.add(color2);
-        colorDao.save(color2);
+        colorRepository.save(color2);
 
         Quiz quiz = new Quiz();
         quiz.setName("DevOps");
@@ -437,7 +437,7 @@ public class GenerateDateService {
         quiz.setType(Quiz.Type.TEST);
         quiz.setQuestions(questions);
         quiz.setColors(colorList);
-        quizDao.save(quiz);
+        quizRepository.save(quiz);
 
         QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
@@ -463,10 +463,10 @@ public class GenerateDateService {
         message3.setMessage(
                 "That was a tough test! But remember, there are no wrong answers, only new lessons! Remain curious and keep learning!");
 
-        messageDao.save(message);
-        messageDao.save(message1);
-        messageDao.save(message2);
-        messageDao.save(message3);
+        messageRepository.save(message);
+        messageRepository.save(message1);
+        messageRepository.save(message2);
+        messageRepository.save(message3);
 
         System.out.println("Generate Data Service: DevOps Quiz Generated.");
     }
@@ -482,25 +482,25 @@ public class GenerateDateService {
         a.setText("[A, D, B, C]");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("[D, B, C]");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("[A, D, C]");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("[D, B12, C]");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("public class Vitamins {\n" + "\tpublic static void main(String[] args) {\n"
@@ -513,7 +513,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -521,27 +521,27 @@ public class GenerateDateService {
         a.setText("It creates an object and object is eligible for garbage collection");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("It creates an object and object is not eligible for garbage collection");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText(
                 "It creates two objects: e and e1. The e object is eligible for garbage collection");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText(
                 "It creates two objects and both objects are not eligible for garbage collection");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("class Engine {\n" + "}\n" + " \n" + "public class App {\n"
@@ -552,7 +552,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -560,19 +560,19 @@ public class GenerateDateService {
         a.setText("final class Cart");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("public class Cart");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("private class Cart");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("//Given this code fragment from Cart.java:\n" + " \n" + "package shop;\n" + " \n"
@@ -587,7 +587,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -595,25 +595,25 @@ public class GenerateDateService {
         a.setText("Replace line n1 with double wage = 2");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Replace line n2 with long monthDays = weekDays * 4L");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Replace line n3 with long yearDays = monthDays * 12");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Replace line n4 with long totalWage = yearDays * (long)wage");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("double wage = 2.0;\t\t\t\t// line n1\n" + "int weekDays = 5;\n"
@@ -624,7 +624,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -632,37 +632,37 @@ public class GenerateDateService {
         a.setText("Compile-time error");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints 1");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints 2");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints 3");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints 7");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints 8");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("public class Static {\n" + "\tstatic {\n" + "\t\tint x = 5;\n" + "\t}\n" + "\n"
@@ -675,7 +675,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -683,25 +683,25 @@ public class GenerateDateService {
         a.setText("The code won't compile");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("\"Some things are true in this world\" will be printed");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("\"Hey this won't compile\" will be printed");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("None of these");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("boolean a = true;\n" + "boolean b = false;\n" + "boolean c = true;\n"
@@ -716,7 +716,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -724,25 +724,25 @@ public class GenerateDateService {
         a.setText("15 020");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("15 015");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("20 020");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("0 1520");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("class Value{\n" + "\tpublic int i = 15;\n" + "}\n" + " \n"
@@ -759,7 +759,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -767,32 +767,32 @@ public class GenerateDateService {
         a.setText("RuntimeException");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("VirtualMachineError");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("IllegalAccessException");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Throwable");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle("The class AssertionError has \"is-a\" relationship with these classes ?");
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -800,25 +800,25 @@ public class GenerateDateService {
         a.setText("Prints: Value is - 9.0");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Prints: Value is - 5");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Сompilation error");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("None of these");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("public class Ternary {\n" + "\tpublic static void main(String[] args) {\n"
@@ -829,7 +829,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -837,33 +837,33 @@ public class GenerateDateService {
         a.setText("100 will be printed 11 times");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("100 will be printed 10 times and then there will be a runtime exception");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText(
                 "The code will not compile because the variable i cannot be declared twice within the main() method");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText(
                 "The code will not compile because the variable j cannot be declared twice within the switch statement");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("None of these");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("public static void main(String[] args) {\n" + "\t\tchar digit = 'a';\n"
@@ -878,7 +878,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -886,25 +886,25 @@ public class GenerateDateService {
         a.setText("Compilation error at line 5");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Compilation error at line 9");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Compilation error at line 11");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("None of these");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("//Filename: SuperclassX.java\n" + "package packageX;\n" + " \n"
@@ -923,7 +923,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -931,32 +931,32 @@ public class GenerateDateService {
         a.setText("Line 4 will not compile as void method can not be overridden");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("An exception at line 9");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText(
                 "Line 9 will not compile as there is no version of myMethod which takes a char as argument");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("The code compiles and produces output: int version");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("The code compiles and produces output: String version");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setText("class MyClass {\n"
@@ -970,19 +970,19 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.CODE);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         List<Color> colorList = new ArrayList<>();
 
         Color c = new Color();
         c.setCode("#197E92");
         colorList.add(c);
-        colorDao.save(c);
+        colorRepository.save(c);
 
         c = new Color();
         c.setCode("#095F73");
         colorList.add(c);
-        colorDao.save(c);
+        colorRepository.save(c);
 
         Quiz quiz = new Quiz();
         quiz.setName("Java");
@@ -990,7 +990,7 @@ public class GenerateDateService {
         quiz.setType(Quiz.Type.TEST);
         quiz.setQuestions(questions);
         quiz.setColors(colorList);
-        quizDao.save(quiz);
+        quizRepository.save(quiz);
 
         QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
@@ -1016,10 +1016,10 @@ public class GenerateDateService {
         message3.setMessage(
                 "That was a tough test! But remember, there are no wrong answers, only new lessons! Remain curious and keep learning!");
 
-        messageDao.save(message);
-        messageDao.save(message1);
-        messageDao.save(message2);
-        messageDao.save(message3);
+        messageRepository.save(message);
+        messageRepository.save(message1);
+        messageRepository.save(message2);
+        messageRepository.save(message3);
 
         System.out.println("Generate Data Service: Java Quiz Generated.");
     }
@@ -1035,19 +1035,19 @@ public class GenerateDateService {
         a.setText("Gamedev");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Cloud");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("ProductDev");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1055,7 +1055,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1063,19 +1063,19 @@ public class GenerateDateService {
         a.setText("0000");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("0101");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("2006");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1083,7 +1083,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1091,19 +1091,19 @@ public class GenerateDateService {
         a.setText("Past");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Future");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Problem");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1111,7 +1111,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1119,19 +1119,19 @@ public class GenerateDateService {
         a.setText("Life");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Learning");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Label");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1139,7 +1139,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1147,19 +1147,19 @@ public class GenerateDateService {
         a.setText("Code");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Cake");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Calculation");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1167,7 +1167,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1175,19 +1175,19 @@ public class GenerateDateService {
         a.setText("GDLviv");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("UkraineGD");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Ukraine");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1195,7 +1195,7 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         answers = new ArrayList<>();
 
@@ -1203,19 +1203,19 @@ public class GenerateDateService {
         a.setText("Interface");
         a.setCorrectly(true);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Infrastructure");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         a = new Answer();
         a.setText("Information");
         a.setCorrectly(false);
         answers.add(a);
-        answerDao.save(a);
+        answerRepository.save(a);
 
         q = new Question();
         q.setTitle(
@@ -1223,19 +1223,19 @@ public class GenerateDateService {
         q.setAnswers(answers);
         q.setType(Question.Type.TEXT);
         questions.add(q);
-        questionDao.save(q);
+        questionRepository.save(q);
 
         List<Color> colorList = new ArrayList<>();
 
         Color c = new Color();
         c.setCode("#508721");
         colorList.add(c);
-        colorDao.save(c);
+        colorRepository.save(c);
 
         c = new Color();
         c.setCode("#175A0A");
         colorList.add(c);
-        colorDao.save(c);
+        colorRepository.save(c);
 
         Quiz quiz = new Quiz();
         quiz.setName("General");
@@ -1243,7 +1243,7 @@ public class GenerateDateService {
         quiz.setType(Quiz.Type.TEST);
         quiz.setQuestions(questions);
         quiz.setColors(colorList);
-        quizDao.save(quiz);
+        quizRepository.save(quiz);
 
         QuizResultMessage message = new QuizResultMessage();
         message.setQuiz(quiz);
@@ -1269,10 +1269,10 @@ public class GenerateDateService {
         message3.setMessage(
                 "That was a tough test! But remember, there are no wrong answers, only new lessons! Remain curious and keep learning!");
 
-        messageDao.save(message);
-        messageDao.save(message1);
-        messageDao.save(message2);
-        messageDao.save(message3);
+        messageRepository.save(message);
+        messageRepository.save(message1);
+        messageRepository.save(message2);
+        messageRepository.save(message3);
 
         System.out.println("Generate Data Service: General Quiz Generated.");
     }

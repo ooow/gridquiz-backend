@@ -4,22 +4,19 @@ import static java.util.Objects.nonNull;
 import static org.jooq.lambda.Seq.seq;
 
 import com.griddynamics.gridquiz.api.models.common.MiniQuizzesModel;
-import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
 import com.griddynamics.gridquiz.api.models.user.UserAnswersModel;
 import com.griddynamics.gridquiz.core.services.AuthenticationService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
 import com.griddynamics.gridquiz.repository.QuizRepository;
-import com.griddynamics.gridquiz.repository.ResultDao;
+import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.models.Quiz;
-import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,10 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
 
     @Autowired
-    private QuizRepository quizDao;
+    private QuizRepository quizRepository;
 
     @Autowired
-    private ResultDao resultDao;
+    private ResultRepository resultRepository;
 
     @Autowired
     private QuizResultService quizResultService;
@@ -65,7 +62,7 @@ public class MainController {
             @RequestHeader(value = "X-User-Token") String userToken) {
         securityValidationService.validateToken(userToken);
 
-        return seq(quizDao.findAll()).map(q -> {
+        return seq(quizRepository.findAll()).map(q -> {
             MiniQuizzesModel miniQuiz = MiniQuizzesModel.builder()
                     .id(q.getId())
                     .name(q.getName())
@@ -74,14 +71,13 @@ public class MainController {
                     .questionsSize(q.getQuestions().size())
                     .build();
 
-            seq(resultDao.findByQuiz(q)).filter(r -> r.getUser().getToken().equals(userToken))
-                    .findFirst()
-                    .ifPresent(r -> {
-                        miniQuiz.setQuestionsComplete(r.getPoints());
-                        if (nonNull(r.getEndTime())) {
-                            miniQuiz.setAttempt(true);
-                        }
-                    });
+            seq(resultRepository.findByQuiz(q)).filter(
+                    r -> r.getUser().getToken().equals(userToken)).findFirst().ifPresent(r -> {
+                miniQuiz.setQuestionsComplete(r.getPoints());
+                if (nonNull(r.getEndTime())) {
+                    miniQuiz.setAttempt(true);
+                }
+            });
 
             return miniQuiz;
         }).toList();
@@ -94,7 +90,7 @@ public class MainController {
         securityValidationService.canStartQuiz(quizId, userToken);
 
         quizResultService.startQuiz(quizId, userToken);
-        //return quizDao.findOne(quizId);
+        //return quizRepository.findOne(quizId);
         return null;
     }
 
@@ -105,16 +101,5 @@ public class MainController {
         securityValidationService.validateToken(userToken);
 
         return quizResultService.calculateResult(answers, userToken);
-    }
-
-    @PostMapping(value = "/auth/user")
-    @ResponseBody
-    public User authUser(@RequestBody User user) {
-        return authenticationService.authUser(user);
-    }
-
-    @GetMapping(value = "/dashboard")
-    public List<DashboardModel> dashboard() {
-        return quizResultService.generateDashboard();
     }
 }

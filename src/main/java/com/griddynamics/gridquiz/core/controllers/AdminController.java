@@ -8,8 +8,6 @@ import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.core.services.common.FileDownload;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
 import com.griddynamics.gridquiz.repository.QuizRepository;
-import com.griddynamics.gridquiz.repository.ResultDao;
-import com.griddynamics.gridquiz.repository.UserDao;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -32,13 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @Autowired
-    private QuizRepository quizDao;
-
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private ResultDao resultDao;
+    private QuizRepository quizRepository;
 
     @Autowired
     private QuizResultService quizResultService;
@@ -48,7 +40,6 @@ public class AdminController {
 
     @Autowired
     private ReportService reportService;
-
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e) {
@@ -62,16 +53,18 @@ public class AdminController {
     }
 
     @PostMapping(value = "/quiz/create")
-    public String createQuiz(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody Quiz quiz) {
+    public String createQuiz(@RequestHeader(value = "X-User-Token") String userToken,
+                             @RequestBody Quiz quiz) {
         securityValidationService.isAdmin(userToken);
 
-        quizDao.save(quiz);
+        quizRepository.save(quiz);
         return String.format("Quiz %s created", quiz.getName());
     }
 
     @PostMapping(value = "/users")
     @ResponseBody
-    public List<UserDashboardResultModel> getUsers(@RequestHeader(value = "X-User-Token") String userToken) {
+    public List<UserDashboardResultModel> getUsers(
+            @RequestHeader(value = "X-User-Token") String userToken) {
         securityValidationService.isAdmin(userToken);
 
         return quizResultService.getUsers();
@@ -79,20 +72,23 @@ public class AdminController {
 
     @PostMapping(value = "/users/remove")
     @ResponseBody
-    public List<UserDashboardResultModel> removeUsers(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> userIds) {
+    public List<UserDashboardResultModel> removeUsers(
+            @RequestHeader(value = "X-User-Token") String userToken,
+            @RequestBody List<Long> userIds) {
         securityValidationService.isAdmin(userToken);
 
         //        // remove user results story
-        //        seq(userIds).forEach(userId -> resultDao.removeByUser(userDao.findOne(userId)));
+        //        seq(userIds).forEach(userId -> resultRepository.removeByUser(userRepository.findOne(userId)));
         //        // delete users
-        //        seq(userIds).forEach(userId -> userDao.delete(userId));
+        //        seq(userIds).forEach(userId -> userRepository.delete(userId));
 
         return quizResultService.getUsers();
     }
 
     @PostMapping(value = "/non/approved")
     @ResponseBody
-    public List<NonApprovedModel> preparingOnApprove(@RequestHeader(value = "X-User-Token") String userToken) {
+    public List<NonApprovedModel> preparingOnApprove(
+            @RequestHeader(value = "X-User-Token") String userToken) {
         securityValidationService.isAdmin(userToken);
 
         return quizResultService.nonApproved();
@@ -100,13 +96,14 @@ public class AdminController {
 
     @PostMapping(value = "/dashboard/approve")
     @ResponseBody
-    public List<NonApprovedModel> approve(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<Long> resultsIds) {
+    public List<NonApprovedModel> approve(@RequestHeader(value = "X-User-Token") String userToken,
+                                          @RequestBody List<Long> resultsIds) {
         securityValidationService.isAdmin(userToken);
         //
         //        seq(resultsIds).forEach(id -> {
-        //                    UserResult r = resultDao.findOne(id);
+        //                    UserResult r = resultRepository.findOne(id);
         //                    r.setApproved(true);
-        //                    resultDao.save(r);
+        //                    resultRepository.save(r);
         //                }
         //        );
 
@@ -114,7 +111,8 @@ public class AdminController {
     }
 
     @GetMapping(value = "/download/report")
-    public void downloadReport(@RequestHeader(value = "X-User-Token") String userToken, HttpServletResponse response) throws IOException {
+    public void downloadReport(@RequestHeader(value = "X-User-Token") String userToken,
+                               HttpServletResponse response) throws IOException {
         securityValidationService.isAdmin(userToken);
 
         FileDownload.newFileDownload()

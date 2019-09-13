@@ -3,6 +3,8 @@ package com.griddynamics.gridquiz.rest;
 import static org.jooq.lambda.Seq.seq;
 
 import com.griddynamics.gridquiz.api.models.common.MiniQuizzesModel;
+import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
+import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class OpenController {
     @Autowired
     private QuizRepository quizRepository;
 
+    @Autowired
+    private QuizResultService quizResultService;
+
     @GetMapping(value = "/quizzes")
     @ResponseBody
     public List<MiniQuizzesModel> quizzes() {
@@ -31,5 +36,11 @@ public class OpenController {
                 .questionsSize(q.getQuestions().size())
                 .questionsComplete(0)
                 .build()).toList();
+    }
+
+    @GetMapping(value = "/dashboard")
+    @ResponseBody
+    public List<DashboardModel> dashboard() {
+        return quizResultService.generateDashboard();
     }
 }

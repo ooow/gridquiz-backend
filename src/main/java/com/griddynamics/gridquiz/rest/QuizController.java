@@ -29,7 +29,7 @@ public class QuizController {
     public Quiz quiz(@RequestHeader(value = "X-User-Token") String userToken,
                      @RequestBody String quizId) {
         //quizResultService.startQuiz(quizId, userToken);
-        //return quizDao.findOne(quizId);
+        //return quizRepository.findOne(quizId);
         return repository.findById(quizId).orElse(null);
     }
 }

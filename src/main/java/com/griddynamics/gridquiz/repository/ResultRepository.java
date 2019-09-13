@@ -6,7 +6,7 @@ import com.griddynamics.gridquiz.repository.models.UserResult;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ResultDao extends MongoRepository<UserResult, Long> {
+public interface ResultRepository extends MongoRepository<UserResult, String> {
     List<UserResult> removeByUser(User user);
 
     List<UserResult> findByQuiz(Quiz quiz);

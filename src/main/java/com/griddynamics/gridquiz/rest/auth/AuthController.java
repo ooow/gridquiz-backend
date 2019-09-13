@@ -21,6 +21,6 @@ public class AuthController {
     @PostMapping(value = "/user")
     @ResponseBody
     public User authUser(@RequestBody User user) {
-        return authenticationService.authUser(user);
+        return authenticationService.authorize(user);
     }
 }
