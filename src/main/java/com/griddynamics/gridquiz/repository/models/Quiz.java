@@ -1,38 +1,28 @@
 package com.griddynamics.gridquiz.repository.models;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.Identifiable;
-
-import javax.persistence.*;
-import java.util.List;
+import org.springframework.data.annotation.Id;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "quizzes")
-public class Quiz implements Identifiable<Long> {
+public class Quiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column
     private String description;
 
-    @OneToMany
-    @JoinColumn
     private List<Color> colors;
 
-    @OneToMany
-    @JoinColumn
     private List<Question> questions;
 
-    @Column
-    @Enumerated(EnumType.STRING)
     private Type type;
 
     public enum Type {

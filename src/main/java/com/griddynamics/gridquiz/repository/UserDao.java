@@ -2,13 +2,10 @@ package com.griddynamics.gridquiz.repository;
 
 import com.griddynamics.gridquiz.repository.models.Role;
 import com.griddynamics.gridquiz.repository.models.User;
-import org.springframework.data.repository.CrudRepository;
-
-import javax.transaction.Transactional;
 import java.util.List;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Transactional
-public interface UserDao extends CrudRepository<User, Long> {
+public interface UserDao extends MongoRepository<User, Long> {
     User findByEmail(String email);
 
     User findByPhone(String phone);

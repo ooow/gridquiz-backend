@@ -4,32 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.Identifiable;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "users")
-public class User implements Identifiable<Long> {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column
     private String email;
 
-    @Column
     private String phone;
 
-    @Column
     private Role role;
 
-    @Column
     private String token;
 }

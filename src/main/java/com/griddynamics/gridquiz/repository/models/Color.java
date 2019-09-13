@@ -4,24 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.Identifiable;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "colors")
-public class Color implements Identifiable<Long> {
+public class Color {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long id;
+    private String id;
 
-    @Column
     private String code;
-
-    public Long getId() {
-        return id;
-    }
 }

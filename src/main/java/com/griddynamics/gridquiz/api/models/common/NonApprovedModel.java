@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class NonApprovedModel {
-    private Long id;
+    private String id;
     private String name;
     private int points;
     private String quizName;

@@ -1,10 +1,6 @@
 package com.griddynamics.gridquiz.repository;
 
 import com.griddynamics.gridquiz.repository.models.Question;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import javax.transaction.Transactional;
-
-@Transactional
-public interface QuestionDao extends CrudRepository<Question, Long> {
-}
+public interface QuestionDao extends MongoRepository<Question, Long> {}

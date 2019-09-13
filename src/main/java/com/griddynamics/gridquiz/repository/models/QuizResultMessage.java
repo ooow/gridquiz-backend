@@ -4,28 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.Identifiable;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "quiz_result_messages")
-public class QuizResultMessage implements Identifiable<Long> {
+public class QuizResultMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private Long id;
+    private String id;
 
-    @OneToOne
-    @JoinColumn(nullable = false)
     @JsonIgnore
     private Quiz quiz;
 
-    @Column(nullable = false)
     private int rate;
 
-    @Column(nullable = false)
     private String message;
 }

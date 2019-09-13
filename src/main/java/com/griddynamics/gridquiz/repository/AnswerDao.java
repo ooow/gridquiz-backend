@@ -1,11 +1,8 @@
 package com.griddynamics.gridquiz.repository;
 
 import com.griddynamics.gridquiz.repository.models.Answer;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import javax.transaction.Transactional;
-
-@Transactional
-public interface AnswerDao extends CrudRepository<Answer, Long> {
+public interface AnswerDao extends MongoRepository<Answer, Long> {
     Answer findByTextFieldAnswer(String textFieldAnswer);
 }

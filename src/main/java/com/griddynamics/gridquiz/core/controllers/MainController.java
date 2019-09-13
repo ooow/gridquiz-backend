@@ -1,5 +1,8 @@
 package com.griddynamics.gridquiz.core.controllers;
 
+import static java.util.Objects.nonNull;
+import static org.jooq.lambda.Seq.seq;
+
 import com.griddynamics.gridquiz.api.models.common.MiniQuizzesModel;
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
 import com.griddynamics.gridquiz.api.models.user.UserAnswersModel;
@@ -7,18 +10,22 @@ import com.griddynamics.gridquiz.core.services.AuthenticationService;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
 import com.griddynamics.gridquiz.core.services.SecurityValidationService;
 import com.griddynamics.gridquiz.core.services.security.SecurityValidationException;
-import com.griddynamics.gridquiz.repository.QuizDao;
+import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultDao;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
-import static java.util.Objects.nonNull;
-import static org.jooq.lambda.Seq.seq;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
@@ -26,7 +33,7 @@ import static org.jooq.lambda.Seq.seq;
 public class MainController {
 
     @Autowired
-    private QuizDao quizDao;
+    private QuizRepository quizDao;
 
     @Autowired
     private ResultDao resultDao;
@@ -52,22 +59,10 @@ public class MainController {
         return "Internal error.";
     }
 
-    @PostMapping(value = "/quizzes")
-    @ResponseBody
-    public List<MiniQuizzesModel> quizzes() {
-        return seq(quizDao.findAll()).map(q -> MiniQuizzesModel.builder()
-                .id(q.getId())
-                .name(q.getName())
-                .description(q.getDescription())
-                .colors(q.getColors())
-                .questionsSize(q.getQuestions().size())
-                .questionsComplete(0)
-                .build()).toList();
-    }
-
     @PostMapping(value = "/quizzes/history")
     @ResponseBody
-    public List<MiniQuizzesModel> loadQuizzesHistoryForUser(@RequestHeader(value = "X-User-Token") String userToken) {
+    public List<MiniQuizzesModel> loadQuizzesHistoryForUser(
+            @RequestHeader(value = "X-User-Token") String userToken) {
         securityValidationService.validateToken(userToken);
 
         return seq(quizDao.findAll()).map(q -> {
@@ -79,8 +74,7 @@ public class MainController {
                     .questionsSize(q.getQuestions().size())
                     .build();
 
-            seq(resultDao.findByQuiz(q))
-                    .filter(r -> r.getUser().getToken().equals(userToken))
+            seq(resultDao.findByQuiz(q)).filter(r -> r.getUser().getToken().equals(userToken))
                     .findFirst()
                     .ifPresent(r -> {
                         miniQuiz.setQuestionsComplete(r.getPoints());
@@ -95,16 +89,19 @@ public class MainController {
 
     @PostMapping(value = "/quiz/start")
     @ResponseBody
-    public Quiz quiz(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody Long quizId) {
+    public Quiz quiz(@RequestHeader(value = "X-User-Token") String userToken,
+                     @RequestBody Long quizId) {
         securityValidationService.canStartQuiz(quizId, userToken);
 
         quizResultService.startQuiz(quizId, userToken);
-        return quizDao.findOne(quizId);
+        //return quizDao.findOne(quizId);
+        return null;
     }
 
     @PostMapping(value = "/quiz/result")
     @ResponseBody
-    public UserResult quizResult(@RequestHeader(value = "X-User-Token") String userToken, @RequestBody List<UserAnswersModel> answers) {
+    public UserResult quizResult(@RequestHeader(value = "X-User-Token") String userToken,
+                                 @RequestBody List<UserAnswersModel> answers) {
         securityValidationService.validateToken(userToken);
 
         return quizResultService.calculateResult(answers, userToken);

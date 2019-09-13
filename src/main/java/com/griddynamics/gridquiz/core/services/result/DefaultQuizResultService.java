@@ -1,5 +1,8 @@
 package com.griddynamics.gridquiz.core.services.result;
 
+import static java.util.Objects.nonNull;
+import static org.jooq.lambda.Seq.seq;
+
 import com.griddynamics.gridquiz.api.models.common.NonApprovedModel;
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardResultModel;
@@ -7,18 +10,22 @@ import com.griddynamics.gridquiz.api.models.user.UserAnswersModel;
 import com.griddynamics.gridquiz.api.models.user.UserDashboardResultModel;
 import com.griddynamics.gridquiz.api.models.user.UserResultsModel;
 import com.griddynamics.gridquiz.core.services.QuizResultService;
-import com.griddynamics.gridquiz.repository.*;
-import com.griddynamics.gridquiz.repository.models.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.griddynamics.gridquiz.repository.AnswerDao;
+import com.griddynamics.gridquiz.repository.QuestionDao;
+import com.griddynamics.gridquiz.repository.QuizRepository;
+import com.griddynamics.gridquiz.repository.QuizResultMessageDao;
+import com.griddynamics.gridquiz.repository.ResultDao;
+import com.griddynamics.gridquiz.repository.UserDao;
+import com.griddynamics.gridquiz.repository.models.Quiz;
+import com.griddynamics.gridquiz.repository.models.QuizResultMessage;
+import com.griddynamics.gridquiz.repository.models.Role;
+import com.griddynamics.gridquiz.repository.models.UserResult;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Objects.nonNull;
-import static org.jooq.lambda.Seq.seq;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultQuizResultService implements QuizResultService {
@@ -30,7 +37,7 @@ public class DefaultQuizResultService implements QuizResultService {
     private AnswerDao answerDao;
 
     @Autowired
-    private QuizDao quizDao;
+    private QuizRepository quizDao;
 
     @Autowired
     private ResultDao resultDao;
@@ -43,46 +50,47 @@ public class DefaultQuizResultService implements QuizResultService {
 
     @Override
     public UserResult calculateResult(List<UserAnswersModel> answers, String userToken) {
-        Quiz quiz = seq(answers)
-                .map(answer -> quizDao.findOne(answer.getQuizId()))
-                .findFirst().orElseGet(null);
-        UserResult result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
-                .filter(r -> r.getQuiz().equals(quiz))
-                .findFirst()
-                .orElse(null);
-
-        if (nonNull(result)) {
-            int points;
-            if (Quiz.Type.QUIZ.equals(quiz.getType())) {
-                points = Math.toIntExact(
-                        seq(answers)
-                                .filter(a ->
-                                        seq(questionDao.findOne(a.getQuestionId()).getAnswers())
-                                                .map(Answer::getTextFieldAnswer)
-                                                .anyMatch(a.getAnswer().toLowerCase()::equals))
-                                .count());
-            } else {
-                points = Math.toIntExact(
-                        seq(answers)
-                                .filter(a -> answerDao.findOne(Long.valueOf(a.getAnswer())).isCorrectly())
-                                .count());
-            }
-
-            result.setPoints(points);
-            result.setQuiz(quiz);
-            result.setComment(getMessageForQuiz(quiz, points));
-            result.setUser(userDao.findByToken(userToken));
-            result.setEndTime(LocalDateTime.now());
-            result.setApproved(false);
-
-            resultDao.save(result);
-        }
-        return result;
+        //        Quiz quiz = seq(answers)
+        //                .map(answer -> quizDao.findOne(answer.getQuizId()))
+        //                .findFirst().orElseGet(null);
+        //        UserResult result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
+        //                .filter(r -> r.getQuiz().equals(quiz))
+        //                .findFirst()
+        //                .orElse(null);
+        //
+        //        if (nonNull(result)) {
+        //            int points;
+        //            if (Quiz.Type.QUIZ.equals(quiz.getType())) {
+        //                points = Math.toIntExact(
+        //                        seq(answers)
+        //                                .filter(a ->
+        //                                        seq(questionDao.findOne(a.getQuestionId()).getAnswers())
+        //                                                .map(Answer::getTextFieldAnswer)
+        //                                                .anyMatch(a.getAnswer().toLowerCase()::equals))
+        //                                .count());
+        //            } else {
+        //                points = Math.toIntExact(
+        //                        seq(answers)
+        //                                .filter(a -> answerDao.findOne(Long.valueOf(a.getAnswer())).isCorrectly())
+        //                                .count());
+        //            }
+        //
+        //            result.setPoints(points);
+        //            result.setQuiz(quiz);
+        //            result.setComment(getMessageForQuiz(quiz, points));
+        //            result.setUser(userDao.findByToken(userToken));
+        //            result.setEndTime(LocalDateTime.now());
+        //            result.setApproved(false);
+        //
+        //            resultDao.save(result);
+        //        }
+        return null;
     }
 
     @Override
     public void startQuiz(Long quizId, String userToken) {
-        Quiz quiz = quizDao.findOne(quizId);
+        //Quiz quiz = quizDao.findOne(quizId);
+        Quiz quiz = null;
         Optional<UserResult> result = seq(resultDao.findByUser(userDao.findByToken(userToken)))
                 .findFirst(r -> r.getQuiz().equals(quiz));
         if (!result.isPresent()) {

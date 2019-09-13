@@ -2,31 +2,26 @@ package com.griddynamics.gridquiz.repository.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.hateoas.Identifiable;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "correctly")
-@Entity(name = "answers")
-public class Answer implements Identifiable<Long> {
+public class Answer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String text;
 
     @JsonIgnore
-    @Column
     private String textFieldAnswer;
 
     @JsonIgnore
-    @Column(nullable = false)
     private boolean correctly;
 }

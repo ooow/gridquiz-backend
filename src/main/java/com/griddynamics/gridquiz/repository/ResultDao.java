@@ -3,13 +3,10 @@ package com.griddynamics.gridquiz.repository;
 import com.griddynamics.gridquiz.repository.models.Quiz;
 import com.griddynamics.gridquiz.repository.models.User;
 import com.griddynamics.gridquiz.repository.models.UserResult;
-import org.springframework.data.repository.CrudRepository;
-
-import javax.transaction.Transactional;
 import java.util.List;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Transactional
-public interface ResultDao extends CrudRepository<UserResult, Long> {
+public interface ResultDao extends MongoRepository<UserResult, Long> {
     List<UserResult> removeByUser(User user);
 
     List<UserResult> findByQuiz(Quiz quiz);

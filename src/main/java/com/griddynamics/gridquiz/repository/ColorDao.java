@@ -1,10 +1,6 @@
 package com.griddynamics.gridquiz.repository;
 
 import com.griddynamics.gridquiz.repository.models.Color;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import javax.transaction.Transactional;
-
-@Transactional
-public interface ColorDao extends CrudRepository<Color, Long> {
-}
+public interface ColorDao extends MongoRepository<Color, Long> {}
