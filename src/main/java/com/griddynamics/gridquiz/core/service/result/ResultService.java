@@ -4,9 +4,16 @@ import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.User;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ResultService {
-    Result calculateResult(User user, Quiz quiz, Map<String, String> answers);
+    Optional<Result> calculateResult(User user, Quiz quiz, Map<String, String> answers);
 
-    Result startQuiz(User user, String quizId);
+    /**
+     * Controls the user attempts to open the quiz. When the user opens the quiz for the first time
+     * it generates a {@link Result} with start data and stores it in the repository. Next time when
+     * the user opens the quiz it returns stored result to allow continue the quiz. If the user has
+     * already completed the quiz returns null.
+     */
+    Optional<Result> control(User user, String quizId);
 }

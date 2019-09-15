@@ -1,6 +1,5 @@
 package com.griddynamics.gridquiz.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.griddynamics.gridquiz.rest.auth.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class User {
     @Id
-    @JsonIgnore
     private String id;
     private String name;
     private String email;

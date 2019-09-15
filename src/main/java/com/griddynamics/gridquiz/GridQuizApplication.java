@@ -6,6 +6,8 @@ import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Question;
 import com.griddynamics.gridquiz.repository.model.Quiz;
+import com.griddynamics.gridquiz.repository.model.User;
+import com.griddynamics.gridquiz.rest.auth.Role;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -44,6 +46,17 @@ public class GridQuizApplication implements CommandLineRunner {
         initDevOpsQuiz();
         initJavaQuiz();
         initGeneralQuiz();
+        initDummyUser();
+    }
+
+    private void initDummyUser() {
+        userRepository.save(User.builder()
+                                    .name("Test")
+                                    .email("test@gmail.com")
+                                    .phone("+48532554323")
+                                    .role(Role.USER)
+                                    .build());
+        System.out.println("Generate Data Service: Dummy User Generated.");
     }
 
     private void initDevOpsQuiz() {

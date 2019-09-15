@@ -3,7 +3,9 @@ package com.griddynamics.gridquiz.rest;
 import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
+import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.User;
+import com.griddynamics.gridquiz.rest.model.Attempt;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,13 @@ public class QuizController {
         return repository.save(quiz);
     }
 
-    @PostMapping(value = "/start")
+    @PostMapping(value = "/load")
     @ResponseBody
-    public Quiz start(@RequestBody User user, @RequestBody String quizId) {
-        resultService.startQuiz(user, quizId);
-        return repository.findById(quizId).orElse(null);
+    public Attempt load(@RequestBody User user, @RequestBody String quizId) {
+        Result result = resultService.control(user, quizId).orElse(null);
+        Quiz quiz = repository.findById(quizId).orElse(null);
+
+        return Attempt.builder().quiz(quiz).attempt(result).build();
     }
 
     @PostMapping(value = "/history")

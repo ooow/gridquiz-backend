@@ -1,7 +1,6 @@
 package com.griddynamics.gridquiz.rest;
 
 import com.griddynamics.gridquiz.core.service.result.ResultService;
-import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.User;
@@ -19,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/result")
 public class ResultController {
     @Autowired
-    private ResultRepository repository;
-
-    @Autowired
     private ResultService service;
 
     @PostMapping(value = "/submit")
@@ -29,7 +25,6 @@ public class ResultController {
     public Result submit(@RequestBody User user,
                          @RequestBody Quiz quiz,
                          @RequestBody Map<String, String> answers) {
-
-        return repository.save(service.calculateResult(user, quiz, answers));
+        return service.calculateResult(user, quiz, answers).orElse(null);
     }
 }

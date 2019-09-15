@@ -2,6 +2,8 @@ package com.griddynamics.gridquiz.rest;
 
 import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
 import com.griddynamics.gridquiz.core.service.quiz.QuizService;
+import com.griddynamics.gridquiz.repository.UserRepository;
+import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class OpenController {
     @Autowired
     private QuizService quizService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping(value = "/mini/quizzes")
     @ResponseBody
     public List<MiniQuiz> quizzes() {
@@ -29,5 +34,11 @@ public class OpenController {
     @ResponseBody
     public List<DashboardModel> dashboard() {
         return null; //quizResultService.generateDashboard();
+    }
+
+    @GetMapping(value = "/user/load")
+    @ResponseBody
+    public User getUser() {
+        return userRepository.findAll().get(0); //TODO: Temp.
     }
 }

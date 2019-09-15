@@ -21,6 +21,7 @@ public class Result {
     private String quizId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String currentQuestion;
     private long points;
     private boolean approved;
 }
