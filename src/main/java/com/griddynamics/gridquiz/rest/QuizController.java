@@ -7,6 +7,7 @@ import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.model.Attempt;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
+import com.griddynamics.gridquiz.rest.model.Request;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,9 +35,9 @@ public class QuizController {
 
     @PostMapping(value = "/load")
     @ResponseBody
-    public Attempt load(@RequestBody User user, @RequestBody String quizId) {
-        Result result = resultService.control(user, quizId).orElse(null);
-        Quiz quiz = repository.findById(quizId).orElse(null);
+    public Attempt load(@RequestBody Request<String> request) {
+        Result result = resultService.control(request.getUser(), request.getMessage()).orElse(null);
+        Quiz quiz = repository.findById(request.getMessage()).orElse(null);
 
         return Attempt.builder().quiz(quiz).attempt(result).build();
     }
