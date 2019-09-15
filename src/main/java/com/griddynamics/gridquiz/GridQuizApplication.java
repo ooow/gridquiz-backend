@@ -3,11 +3,11 @@ package com.griddynamics.gridquiz;
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultRepository;
+import com.griddynamics.gridquiz.repository.RoleRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Question;
 import com.griddynamics.gridquiz.repository.model.Quiz;
-import com.griddynamics.gridquiz.repository.model.User;
-import com.griddynamics.gridquiz.rest.auth.Role;
+import com.griddynamics.gridquiz.repository.model.Role;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -29,6 +29,9 @@ public class GridQuizApplication implements CommandLineRunner {
     @Autowired
     private ResultRepository resultRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(GridQuizApplication.class, args);
     }
@@ -39,6 +42,7 @@ public class GridQuizApplication implements CommandLineRunner {
         userRepository.deleteAll();
         questionRepository.deleteAll();
         resultRepository.deleteAll();
+        roleRepository.deleteAll();
         init();
     }
 
@@ -46,17 +50,15 @@ public class GridQuizApplication implements CommandLineRunner {
         initDevOpsQuiz();
         initJavaQuiz();
         initGeneralQuiz();
-        initDummyUser();
+        initRoles();
     }
 
-    private void initDummyUser() {
-        userRepository.save(User.builder()
-                                    .name("Test")
-                                    .email("test@gmail.com")
-                                    .phone("+48532554323")
-                                    .role(Role.USER)
-                                    .build());
-        System.out.println("Generate Data Service: Dummy User Generated.");
+    private void initRoles() {
+        roleRepository.save(
+                roleRepository.findByRole("USER").orElse(Role.builder().role("USER").build()));
+        roleRepository.save(
+                roleRepository.findByRole("ADMIN").orElse(Role.builder().role("ADMIN").build()));
+        System.out.println("Generate Data Service: Roles Generated.");
     }
 
     private void initDevOpsQuiz() {
