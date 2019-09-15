@@ -19,7 +19,7 @@ public class OpenController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping(value = "/quizzes")
+    @GetMapping(value = "/mini/quizzes")
     @ResponseBody
     public List<MiniQuiz> quizzes() {
         return quizService.getAllMiniQuizzes();

@@ -41,6 +41,12 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void init() {
+        initDevOpsQuiz();
+        initJavaQuiz();
+        initGeneralQuiz();
+    }
+
+    private void initDevOpsQuiz() {
         Question one = Question.builder()
                 .title("DevOps is")
                 .answers(List.of("Culture", "Role", "Team", "Application"))
@@ -59,9 +65,74 @@ public class GridQuizApplication implements CommandLineRunner {
         quizRepository.save(Quiz.builder()
                                     .name("DevOps")
                                     .description("DevOps Tech Quiz")
-                                    .questions(questions).colors(List.of("#B66D18", "#984E03"))
+                                    .questions(questions)
+                                    .colors(List.of("#B66D18", "#984E03"))
                                     .build());
 
         System.out.println("Generate Data Service: DevOps Quiz Generated.");
+    }
+
+    private void initJavaQuiz() {
+        Question one = Question.builder()
+                .title("What is the result ?")
+                .text("public class Vitamins {\n" + "\tpublic static void main(String[] args) {\n"
+                              + "\t\tList<String> vitamins = new ArrayList<>();\n"
+                              + "\t\tvitamins.add(\"A\");\n" + "\t\tvitamins.add(\"B12\");\n"
+                              + "\t\tvitamins.add(\"C\");\n" + "\t\tvitamins.set(1, \"B\");\n"
+                              + "\t\tvitamins.add(1, \"D\");\n"
+                              + "\t\tSystem.out.println(vitamins);\n" + "\t}\n" + "}\n")
+                .answers(List.of("[A, D, B, C]", "[D, B, C]", "[A, D, C]", "[D, B12, C]"))
+                .correctAnswer("[A, D, B, C]")
+                .build();
+
+        Question two = Question.builder()
+                .title("Which statement is true about this code ?")
+                .text("class Engine {\n" + "}\n" + " \n" + "public class App {\n"
+                              + "\tpublic static void main(String[] args) {\n"
+                              + "\t\tEngine e = new Engine();\n" + "\t\tEngine e1 = e;\n"
+                              + "\t\te = null;\n" + "\t}\n" + "}\n")
+                .answers(
+                        List.of("It creates an object and object is not eligible for garbage collection",
+                                "It creates an object and object is eligible for garbage collection",
+                                "It creates two objects and both objects are not eligible for garbage collection",
+                                "It creates two objects: e and e1. The e object is eligible for garbage collection"))
+                .correctAnswer("It creates an object and object is eligible for garbage collection")
+                .build();
+        List<Question> questions = List.of(one, two);
+
+        questionRepository.saveAll(questions);
+        quizRepository.save(Quiz.builder()
+                                    .name("Java")
+                                    .description("Java Tech Quiz")
+                                    .questions(questions)
+                                    .colors(List.of("#197E92", "#095F73"))
+                                    .build());
+
+        System.out.println("Generate Data Service: Java Quiz Generated.");
+    }
+
+    private void initGeneralQuiz() {
+        Question one = Question.builder()
+                .title("Grid Dynamics is an Exclusive Partner for Lviv IT Arena. Select our technology")
+                .answers(List.of("Gamedev", "Cloud", "ProductDev"))
+                .correctAnswer("Cloud")
+                .build();
+
+        Question two = Question.builder()
+                .title("Stop by our booth and attend Live Demo session. Complete the secret phrase provided by a speaker at the end of the session: \"Artificial Intelligence is the ...\"")
+                .answers(List.of("Past", "Future", "Problem"))
+                .correctAnswer("Future")
+                .build();
+        List<Question> questions = List.of(one, two);
+
+        questionRepository.saveAll(questions);
+        quizRepository.save(Quiz.builder()
+                                    .name("General")
+                                    .description("General Quiz")
+                                    .questions(questions)
+                                    .colors(List.of("#508721", "#175A0A"))
+                                    .build());
+
+        System.out.println("Generate Data Service: General Quiz Generated.");
     }
 }
