@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,29 +26,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic()
-                .disable()
-                .csrf()
-                .disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/open/**", "/auth/login")
+        http.csrf().disable();
+
+        http.cors();
+
+        http.authorizeRequests().antMatchers("/open/**", "/auth/**")
                 .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .csrf()
-                .disable()
-                .exceptionHandling()
-                .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+                .anyRequest().authenticated();
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.exceptionHandling();
+
+        //http.httpBasic();
+
+        http.apply(new JwtConfigurer(jwtTokenProvider));
+
+        http.headers().cacheControl();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(mongoUserDetails());
+        auth.userDetailsService(mongoUserDetails()).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean
@@ -56,20 +57,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public UserDetailsService mongoUserDetails() {
         return new CustomUserDetailsService();
     }
 }
 
 //        http.httpBasic()
+//                .disable()
+//                .csrf()
+//                .disable()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()
 //                .authorizeRequests()
 //                .antMatchers("/open/**")
 //                .permitAll()
-//                .antMatchers("/quiz/**")
-//                .hasRole("USER")
+//                .antMatchers("/auth/**")
+//                .permitAll()
+//                .anyRequest()
+//                .authenticated()
 //                .and()
 //                .csrf()
 //                .disable()
-//                .formLogin()
-//                .disable();
+//                .exceptionHandling()
+//                .authenticationEntryPoint(unauthorizedEntryPoint())
+//                .and()
+//                .apply(new JwtConfigurer(jwtTokenProvider));

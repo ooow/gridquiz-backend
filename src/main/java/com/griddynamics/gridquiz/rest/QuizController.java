@@ -1,10 +1,10 @@
 package com.griddynamics.gridquiz.rest;
 
+import com.griddynamics.gridquiz.core.service.quiz.QuizService;
 import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.model.Attempt;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import com.griddynamics.gridquiz.rest.model.Request;
@@ -27,6 +27,9 @@ public class QuizController {
     @Autowired
     private ResultService resultService;
 
+    @Autowired
+    private QuizService quizService;
+
     @PostMapping(value = "/create")
     @ResponseBody
     public Quiz create(@RequestBody Quiz quiz) {
@@ -42,10 +45,9 @@ public class QuizController {
         return Attempt.builder().quiz(quiz).attempt(result).build();
     }
 
-    @PostMapping(value = "/history")
+    @PostMapping(value = "/mini")
     @ResponseBody
-    public List<MiniQuiz> history(@RequestBody User user, @RequestBody String quizId) {
-        // TODO: Implement.
-        return null;
+    public List<MiniQuiz> miniQuizzes(@RequestBody String userId) {
+        return quizService.getUserMiniQuizzes(userId);
     }
 }

@@ -12,6 +12,6 @@ public class MiniQuiz {
     private String description;
     private List<String> colors;
     private int questionsSize;
-    private int questionsComplete;
+    private long questionsComplete;
     private boolean attempt;
 }

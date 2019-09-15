@@ -6,6 +6,8 @@ import java.util.List;
 public interface QuizService {
     List<MiniQuiz> getAllMiniQuizzes();
 
+    List<MiniQuiz> getUserMiniQuizzes(String userId);
+
     //    void startQuiz(Long quizId, String userToken);
     //
     //    List<DashboardModel> generateDashboard();
