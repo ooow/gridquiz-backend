@@ -82,8 +82,7 @@ public class GridQuizApplication implements CommandLineRunner {
         quizRepository.save(Quiz.builder()
                                     .name("DevOps")
                                     .description("DevOps Tech Quiz")
-                                    .questions(questions)
-                                    .colors(List.of("#B66D18", "#984E03"))
+                                    .questions(questions).color("#B66D18")
                                     .build());
 
         System.out.println("Generate Data Service: DevOps Quiz Generated.");
@@ -121,8 +120,7 @@ public class GridQuizApplication implements CommandLineRunner {
         quizRepository.save(Quiz.builder()
                                     .name("Java")
                                     .description("Java Tech Quiz")
-                                    .questions(questions)
-                                    .colors(List.of("#197E92", "#095F73"))
+                                    .questions(questions).color("#197E92")
                                     .build());
 
         System.out.println("Generate Data Service: Java Quiz Generated.");
@@ -146,8 +144,7 @@ public class GridQuizApplication implements CommandLineRunner {
         quizRepository.save(Quiz.builder()
                                     .name("General")
                                     .description("General Quiz")
-                                    .questions(questions)
-                                    .colors(List.of("#508721", "#175A0A"))
+                                    .questions(questions).color("#508721")
                                     .build());
 
         System.out.println("Generate Data Service: General Quiz Generated.");

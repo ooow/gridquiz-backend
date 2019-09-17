@@ -28,12 +28,13 @@ public class ResultServiceImpl implements ResultService {
                 .collect(Collectors.toMap(Answer::getQuestionId, Answer::getAnswer));
         Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quiz.getId());
         if (result.isPresent()) {
-            long points = quiz.getQuestions()
+            int points = (int) quiz.getQuestions()
                     .stream()
                     .filter(q -> q.getCorrectAnswer().equals(answersMap.get(q.getId())))
                     .count();
             Result userResult = result.get();
             userResult.setPoints(points);
+            userResult.setOutOf(quiz.getQuestions().size());
             userResult.setEndTime(LocalDateTime.now());
 
             return of(repository.save(userResult));
@@ -59,7 +60,6 @@ public class ResultServiceImpl implements ResultService {
                 .userId(user.getId())
                 .quizId(quizId)
                 .startTime(LocalDateTime.now())
-                .points(0)
                 .approved(false)
                 .build();
         return of(repository.save(firstAttempt));

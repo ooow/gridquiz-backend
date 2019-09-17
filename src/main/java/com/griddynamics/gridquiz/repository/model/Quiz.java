@@ -16,6 +16,6 @@ public class Quiz {
     private String id;
     private String name;
     private String description;
-    private List<String> colors;
+    private String color;
     private List<Question> questions;
 }

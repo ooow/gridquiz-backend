@@ -1,6 +1,6 @@
 package com.griddynamics.gridquiz.core.service.quiz;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Objects.nonNull;
 
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultRepository;
@@ -22,35 +22,21 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<MiniQuiz> getAllMiniQuizzes() {
-        return quizRepository.findAll()
-                .stream()
-                .map(q -> MiniQuiz.builder()
-                        .id(q.getId())
-                        .name(q.getName())
-                        .description(q.getDescription())
-                        .colors(q.getColors())
-                        .questionsSize(q.getQuestions().size())
-                        .questionsComplete(0)
-                        .build())
-                .collect(Collectors.toList());
+        return quizRepository.findAll().stream().map(MiniQuiz::new).collect(Collectors.toList());
     }
 
     @Override
     public List<MiniQuiz> getUserMiniQuizzes(String userId) {
         List<Result> userResults = resultRepository.findAllBy(userId);
-
-        Map<String, Long> results = userResults.stream()
+        Map<String, Integer> results = userResults.stream()
                 .collect(Collectors.toMap(Result::getQuizId, Result::getPoints));
-        return quizRepository.findAll()
-                .stream()
-                .map(q -> MiniQuiz.builder()
-                        .id(q.getId())
-                        .name(q.getName())
-                        .description(q.getDescription())
-                        .colors(q.getColors())
-                        .questionsSize(q.getQuestions().size())
-                        .questionsComplete(ofNullable(results.get(q.getId())).orElse(0L))
-                        .build())
-                .collect(Collectors.toList());
+        return quizRepository.findAll().stream().map(q -> {
+            MiniQuiz mini = new MiniQuiz(q);
+            if (nonNull(results.get(q.getId()))) {
+                mini.setQuestionsComplete(results.get(q.getId()));
+                mini.setAttempt(true);
+            }
+            return mini;
+        }).collect(Collectors.toList());
     }
 }
