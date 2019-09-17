@@ -16,12 +16,10 @@ public class Result {
     @Id
     @JsonIgnore
     private String id;
-    @JsonIgnore
     private String userId;
     private String quizId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String currentQuestion;
     private long points;
     private boolean approved;
 }

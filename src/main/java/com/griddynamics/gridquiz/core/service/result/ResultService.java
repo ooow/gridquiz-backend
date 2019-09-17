@@ -2,13 +2,12 @@ package com.griddynamics.gridquiz.core.service.result;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.UserInternal;
 import com.griddynamics.gridquiz.rest.model.User;
 import java.util.Map;
 import java.util.Optional;
 
 public interface ResultService {
-    Optional<Result> calculateResult(UserInternal user, Quiz quiz, Map<String, String> answers);
+    Optional<Result> calculateResult(User user, Quiz quiz, Map<String, String> answers);
 
     /**
      * Controls the user attempts to open the quiz. When the user opens the quiz for the first time
@@ -16,5 +15,5 @@ public interface ResultService {
      * the user opens the quiz it returns stored result to allow continue the quiz. If the user has
      * already completed the quiz returns null.
      */
-    Optional<Result> control(User user, String quizId);
+    Optional<Result> get(User user, String quizId);
 }

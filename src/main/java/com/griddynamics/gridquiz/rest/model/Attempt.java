@@ -9,5 +9,5 @@ import lombok.Data;
 @Builder
 public class Attempt {
     private Quiz quiz;
-    private Result attempt;
+    private Result result;
 }

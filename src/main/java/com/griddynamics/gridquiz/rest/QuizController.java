@@ -36,13 +36,13 @@ public class QuizController {
         return repository.save(quiz);
     }
 
-    @PostMapping(value = "/load")
+    @PostMapping(value = "/attempt")
     @ResponseBody
-    public Attempt load(@RequestBody Request<String> request) {
-        Result result = resultService.control(request.getUser(), request.getMessage()).orElse(null);
+    public Attempt attempt(@RequestBody Request<String> request) {
+        Result result = resultService.get(request.getUser(), request.getMessage()).orElse(null);
         Quiz quiz = repository.findById(request.getMessage()).orElse(null);
 
-        return Attempt.builder().quiz(quiz).attempt(result).build();
+        return Attempt.builder().quiz(quiz).result(result).build();
     }
 
     @PostMapping(value = "/mini")
