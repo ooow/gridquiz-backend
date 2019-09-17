@@ -3,7 +3,7 @@ package com.griddynamics.gridquiz.rest;
 import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.User;
+import com.griddynamics.gridquiz.repository.model.UserInternal;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +22,7 @@ public class ResultController {
 
     @PostMapping(value = "/submit")
     @ResponseBody
-    public Result submit(@RequestBody User user,
+    public Result submit(@RequestBody UserInternal user,
                          @RequestBody Quiz quiz,
                          @RequestBody Map<String, String> answers) {
         return service.calculateResult(user, quiz, answers).orElse(null);

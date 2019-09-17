@@ -1,5 +1,9 @@
 package com.griddynamics.gridquiz.repository.model;
 
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
+
+import com.griddynamics.gridquiz.rest.model.User;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class UserInternal implements UserDetails {
     @Id
     private String id;
     private String name;
@@ -24,10 +28,34 @@ public class User implements UserDetails {
     private String phone;
     private Set<Role> roles;
 
+    public UserInternal(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.name = user.getName();
+        this.phone = user.getPhone();
+    }
+
+    /** Converts internal user to external for sending to the client. */
+    public User toExternalUser() {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .name(name)
+                .phone(phone)
+                .role(getHighestRole())
+                .build();
+    }
+
     public List<GrantedAuthority> getAuthoritiesList() {
-        return roles.stream()
-                .map(r -> new SimpleGrantedAuthority(r.getRole()))
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().toString()))
                 .collect(Collectors.toList());
+    }
+
+    private Role.Enum getHighestRole() {
+        if (roles.stream().map(Role::getRole).anyMatch(ADMIN::equals)) {
+            return ADMIN;
+        }
+        return USER;
     }
 
     @Override

@@ -14,10 +14,15 @@ import org.springframework.security.core.GrantedAuthority;
 public class Role implements GrantedAuthority {
     @Id
     private String id;
-    private String role;
+    private Enum role;
 
     @Override
     public String getAuthority() {
-        return role;
+        return role.toString();
+    }
+
+    public enum Enum {
+        ADMIN,
+        USER,
     }
 }

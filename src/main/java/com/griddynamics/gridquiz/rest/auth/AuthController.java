@@ -1,9 +1,10 @@
 package com.griddynamics.gridquiz.rest.auth;
 
 import com.griddynamics.gridquiz.repository.UserRepository;
-import com.griddynamics.gridquiz.repository.model.User;
+import com.griddynamics.gridquiz.repository.model.UserInternal;
 import com.griddynamics.gridquiz.rest.auth.jwt.JwtTokenProvider;
 import com.griddynamics.gridquiz.rest.model.Response;
+import com.griddynamics.gridquiz.rest.model.User;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,17 +36,17 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseBody
     public Response login(@RequestBody User newUser) {
-        Optional<User> userExists = userRepository.findByEmail(newUser.getEmail());
-        if (userExists.isPresent()) {
-            User user = userExists.get();
+        Optional<UserInternal> userInternal = userRepository.findByEmail(newUser.getEmail());
+        if (userInternal.isPresent()) {
+            UserInternal user = userInternal.get();
             String username = user.getEmail();
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, username));
             String token = jwtTokenProvider.createToken(user);
-            return Response.builder().user(user).message(token).build();
+            return Response.builder().user(user.toExternalUser()).message(token).build();
         }
-        User user = service.saveUser(newUser);
+        UserInternal user = service.saveUser(new UserInternal(newUser));
         String token = jwtTokenProvider.createToken(user);
-        return Response.builder().user(user).message(token).build();
+        return Response.builder().user(user.toExternalUser()).message(token).build();
     }
 }

@@ -38,9 +38,9 @@ public class GridQuizApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        //roleRepository.deleteAll();
         quizRepository.deleteAll();
         userRepository.deleteAll();
-        roleRepository.deleteAll();
         questionRepository.deleteAll();
         resultRepository.deleteAll();
         init();
@@ -54,11 +54,13 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void initRoles() {
-        roleRepository.save(
-                roleRepository.findByRole("USER").orElse(Role.builder().role("USER").build()));
-        roleRepository.save(
-                roleRepository.findByRole("ADMIN").orElse(Role.builder().role("ADMIN").build()));
-        System.out.println("Generate Data Service: Roles Generated.");
+        if (roleRepository.findAll().size() == 0) {
+            roleRepository.save(roleRepository.findByRole(Role.Enum.USER)
+                                        .orElse(Role.builder().role(Role.Enum.USER).build()));
+            roleRepository.save(roleRepository.findByRole(Role.Enum.ADMIN)
+                                        .orElse(Role.builder().role(Role.Enum.ADMIN).build()));
+            System.out.println("Generate Data Service: Roles Generated.");
+        }
     }
 
     private void initDevOpsQuiz() {

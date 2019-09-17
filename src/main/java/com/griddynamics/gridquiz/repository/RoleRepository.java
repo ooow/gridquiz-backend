@@ -5,5 +5,5 @@ import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface RoleRepository extends MongoRepository<Role, String> {
-    Optional<Role> findByRole(String role);
+    Optional<Role> findByRole(Role.Enum role);
 }
