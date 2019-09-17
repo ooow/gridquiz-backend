@@ -3,11 +3,12 @@ package com.griddynamics.gridquiz.core.service.result;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.rest.model.User;
-import java.util.Map;
+import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
+import java.util.List;
 import java.util.Optional;
 
 public interface ResultService {
-    Optional<Result> calculateResult(User user, Quiz quiz, Map<String, String> answers);
+    Optional<Result> calculateResult(User user, Quiz quiz, List<Answer> answers);
 
     /**
      * Controls the user attempts to open the quiz. When the user opens the quiz for the first time

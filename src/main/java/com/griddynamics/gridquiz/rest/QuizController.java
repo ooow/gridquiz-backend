@@ -40,6 +40,8 @@ public class QuizController {
     @ResponseBody
     public Attempt attempt(@RequestBody Request<String> request) {
         Result result = resultService.get(request.getUser(), request.getMessage()).orElse(null);
+        // TODO: Handel case when the result already exist.
+
         Quiz quiz = repository.findById(request.getMessage()).orElse(null);
 
         return Attempt.builder().quiz(quiz).result(result).build();

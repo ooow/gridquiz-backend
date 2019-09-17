@@ -7,9 +7,12 @@ import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.rest.model.User;
+import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +23,20 @@ public class ResultServiceImpl implements ResultService {
     private ResultRepository repository;
 
     @Override
-    public Optional<Result> calculateResult(User user, Quiz quiz, Map<String, String> answers) {
+    public Optional<Result> calculateResult(User user, Quiz quiz, List<Answer> answers) {
+        Map<String, String> answersMap = answers.stream()
+                .collect(Collectors.toMap(Answer::getQuestionId, Answer::getAnswer));
         Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quiz.getId());
         if (result.isPresent()) {
             long points = quiz.getQuestions()
                     .stream()
-                    .filter(q -> q.getCorrectAnswer().equals(answers.get(q.getId())))
+                    .filter(q -> q.getCorrectAnswer().equals(answersMap.get(q.getId())))
                     .count();
-            return of(repository.save(Result.builder()
-                                              .userId(user.getId())
-                                              .quizId(quiz.getId())
-                                              .startTime(result.get().getStartTime())
-                                              .endTime(LocalDateTime.now())
-                                              .points(points)
-                                              .approved(false)
-                                              .build()));
+            Result userResult = result.get();
+            userResult.setPoints(points);
+            userResult.setEndTime(LocalDateTime.now());
+
+            return of(repository.save(userResult));
         }
         return Optional.empty();
     }

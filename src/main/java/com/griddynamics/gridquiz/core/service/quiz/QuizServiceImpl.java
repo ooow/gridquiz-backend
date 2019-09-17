@@ -4,7 +4,6 @@ import static java.util.Optional.ofNullable;
 
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultRepository;
-import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import java.util.List;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
 public class QuizServiceImpl implements QuizService {
     @Autowired
     private QuizRepository quizRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ResultRepository resultRepository;
@@ -41,8 +37,9 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<MiniQuiz> getUserMiniQuizzes(String userId) {
-        Map<String, Long> results = resultRepository.findByUserId(userId)
-                .stream()
+        List<Result> userResults = resultRepository.findAllBy(userId);
+
+        Map<String, Long> results = userResults.stream()
                 .collect(Collectors.toMap(Result::getQuizId, Result::getPoints));
         return quizRepository.findAll()
                 .stream()
