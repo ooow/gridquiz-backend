@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Response<T> {
-    private User user;
+    private UserModel user;
     private T message;
 }

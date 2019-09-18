@@ -3,7 +3,7 @@ package com.griddynamics.gridquiz.repository.model;
 import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
 import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
 
-import com.griddynamics.gridquiz.rest.model.User;
+import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInternal implements UserDetails {
+public class UserRegistered implements UserDetails {
     @Id
     private String id;
     private String name;
@@ -28,7 +28,7 @@ public class UserInternal implements UserDetails {
     private String phone;
     private Set<Role> roles;
 
-    public UserInternal(User user) {
+    public UserRegistered(UserModel user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();
@@ -36,8 +36,8 @@ public class UserInternal implements UserDetails {
     }
 
     /** Converts internal user to external for sending to the client. */
-    public User toExternalUser() {
-        return User.builder()
+    public UserModel toExternalUser() {
+        return UserModel.builder()
                 .id(id)
                 .email(email)
                 .name(name)

@@ -3,7 +3,7 @@ package com.griddynamics.gridquiz.rest.auth;
 import com.griddynamics.gridquiz.repository.RoleRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Role;
-import com.griddynamics.gridquiz.repository.model.UserInternal;
+import com.griddynamics.gridquiz.repository.model.UserRegistered;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private RoleRepository roleRepository;
 
-    UserInternal saveUser(UserInternal user) {
+    UserRegistered saveUser(UserRegistered user) {
         Role role = roleRepository.findByRole(Role.Enum.USER).get();
         user.setRoles(Set.of(role));
         return userRepository.save(user);
@@ -31,16 +31,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserInternal> user = userRepository.findByEmail(email);
+        Optional<UserRegistered> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
             return buildUserForAuthentication(user.get(), user.get().getAuthoritiesList());
         } else {
-            throw new UsernameNotFoundException("username not found");
+            throw new UsernameNotFoundException("Username not found");
         }
     }
 
-    private UserDetails buildUserForAuthentication(UserInternal user,
+    private UserDetails buildUserForAuthentication(UserRegistered user,
                                                    List<GrantedAuthority> authorities) {
         return new org.springframework.security.core.userdetails.User(user.getEmail(),
                                                                       user.getPassword(),

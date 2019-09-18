@@ -1,11 +1,11 @@
 package com.griddynamics.gridquiz.repository;
 
-import com.griddynamics.gridquiz.repository.model.UserInternal;
+import com.griddynamics.gridquiz.repository.model.UserRegistered;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserRepository extends MongoRepository<UserInternal, String> {
-    Optional<UserInternal> findByEmail(String email);
+public interface UserRepository extends MongoRepository<UserRegistered, String> {
+    Optional<UserRegistered> findByEmail(String email);
 
-    Optional<UserInternal> findByPhone(String phone);
+    Optional<UserRegistered> findByPhone(String phone);
 }

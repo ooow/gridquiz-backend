@@ -6,8 +6,8 @@ import static java.util.Optional.of;
 import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.rest.model.User;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
+import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class ResultServiceImpl implements ResultService {
     private ResultRepository repository;
 
     @Override
-    public Optional<Result> calculateResult(User user, Quiz quiz, List<Answer> answers) {
+    public Optional<Result> calculateResult(UserModel user, Quiz quiz, List<Answer> answers) {
         Map<String, String> answersMap = answers.stream()
                 .collect(Collectors.toMap(Answer::getQuestionId, Answer::getAnswer));
         Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quiz.getId());
@@ -43,7 +43,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Optional<Result> get(User user, String quizId) {
+    public Optional<Result> get(UserModel user, String quizId) {
         Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quizId);
 
         if (result.isPresent()) {
