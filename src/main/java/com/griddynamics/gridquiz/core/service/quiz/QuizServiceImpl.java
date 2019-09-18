@@ -27,7 +27,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<MiniQuiz> getUserMiniQuizzes(String userId) {
-        List<Result> userResults = resultRepository.findAllBy(userId);
+        List<Result> userResults = resultRepository.findAllByUserId(userId);
         Map<String, Integer> results = userResults.stream()
                 .collect(Collectors.toMap(Result::getQuizId, Result::getPoints));
         return quizRepository.findAll().stream().map(q -> {

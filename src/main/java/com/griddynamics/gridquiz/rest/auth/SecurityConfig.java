@@ -31,14 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
 
         http.authorizeRequests().antMatchers("/open/**", "/auth/**")
-                .permitAll()
-                .anyRequest().authenticated();
+                .permitAll().anyRequest().authenticated();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.exceptionHandling();
-
-        //http.httpBasic();
 
         http.apply(new JwtConfigurer(jwtTokenProvider));
 
@@ -66,25 +63,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new CustomUserDetailsService();
     }
 }
-
-//        http.httpBasic()
-//                .disable()
-//                .csrf()
-//                .disable()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/open/**")
-//                .permitAll()
-//                .antMatchers("/auth/**")
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .csrf()
-//                .disable()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(unauthorizedEntryPoint())
-//                .and()
-//                .apply(new JwtConfigurer(jwtTokenProvider));

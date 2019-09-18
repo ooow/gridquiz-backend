@@ -10,7 +10,7 @@ public interface ResultRepository extends MongoRepository<Result, String> {
 
     Optional<List<Result>> findByQuizId(String quizId);
 
-    List<Result> findAllBy(String userId);
+    List<Result> findAllByUserId(String userId);
 
     Optional<Result> findFirstByUserIdAndQuizId(String userId, String quizId);
 
