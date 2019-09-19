@@ -1,5 +1,8 @@
 package com.griddynamics.gridquiz;
 
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
+
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultRepository;
@@ -8,7 +11,10 @@ import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Question;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Role;
+import com.griddynamics.gridquiz.repository.model.UserRegistered;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -47,19 +53,33 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void init() {
+        initRoles();
+        initAdmin();
+        initGeneralQuiz();
         initDevOpsQuiz();
         initJavaQuiz();
-        initGeneralQuiz();
-        initRoles();
     }
 
     private void initRoles() {
         if (roleRepository.findAll().size() == 0) {
-            roleRepository.save(roleRepository.findByRole(Role.Enum.USER)
-                                        .orElse(Role.builder().role(Role.Enum.USER).build()));
-            roleRepository.save(roleRepository.findByRole(Role.Enum.ADMIN)
-                                        .orElse(Role.builder().role(Role.Enum.ADMIN).build()));
+            roleRepository.save(
+                    roleRepository.findByRole(USER).orElse(Role.builder().role(USER).build()));
+            roleRepository.save(
+                    roleRepository.findByRole(ADMIN).orElse(Role.builder().role(ADMIN).build()));
             System.out.println("Generate Data Service: Roles Generated.");
+        }
+    }
+
+    private void initAdmin() {
+        Optional<UserRegistered> admin = userRepository.findByEmail("admin");
+        if (admin.isEmpty()) {
+            userRepository.save(UserRegistered.builder()
+                                        .email("admin")
+                                        .name("admin")
+                                        .roles(Set.of(roleRepository.findByRole(USER).get(),
+                                                      roleRepository.findByRole(ADMIN).get()))
+                                        .build());
+            System.out.println("Generate Data Service: Admin Generated.");
         }
     }
 
@@ -81,8 +101,9 @@ public class GridQuizApplication implements CommandLineRunner {
         questionRepository.saveAll(questions);
         quizRepository.save(Quiz.builder()
                                     .name("DevOps")
-                                    .description("DevOps Tech Quiz")
-                                    .questions(questions).color("#B66D18")
+                                    .description("DevOps Tech")
+                                    .questions(questions)
+                                    .color("#FF8B00")
                                     .build());
 
         System.out.println("Generate Data Service: DevOps Quiz Generated.");
@@ -119,8 +140,9 @@ public class GridQuizApplication implements CommandLineRunner {
         questionRepository.saveAll(questions);
         quizRepository.save(Quiz.builder()
                                     .name("Java")
-                                    .description("Java Tech Quiz")
-                                    .questions(questions).color("#197E92")
+                                    .description("Java Experience")
+                                    .questions(questions)
+                                    .color("#006BB9")
                                     .build());
 
         System.out.println("Generate Data Service: Java Quiz Generated.");
@@ -144,7 +166,8 @@ public class GridQuizApplication implements CommandLineRunner {
         quizRepository.save(Quiz.builder()
                                     .name("General")
                                     .description("General Quiz")
-                                    .questions(questions).color("#508721")
+                                    .questions(questions)
+                                    .color("#A9AA00")
                                     .build());
 
         System.out.println("Generate Data Service: General Quiz Generated.");
