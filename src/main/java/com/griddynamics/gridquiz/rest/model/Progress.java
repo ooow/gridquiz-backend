@@ -1,13 +1,13 @@
 package com.griddynamics.gridquiz.rest.model;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
-import com.griddynamics.gridquiz.repository.model.Result;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class Attempt {
+public class Progress {
     private Quiz quiz;
-    private Result result;
+    private LocalDateTime start;
 }
