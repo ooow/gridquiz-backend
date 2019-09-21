@@ -14,8 +14,7 @@ public interface ResultRepository extends MongoRepository<Result, String> {
 
     Optional<Result> findFirstByUserIdAndQuizId(String userId, String quizId);
 
-    Optional<List<Result>> findTop5ByQuizIdAndApprovedOrderByPointsDesc(String quizId,
-                                                                        boolean approved);
+    List<Result> findTop5ByQuizIdOrderByPointsDesc(String quizId);
 
     Optional<List<Result>> removeByQuizId(String quizId);
 

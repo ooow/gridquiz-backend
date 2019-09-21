@@ -2,6 +2,8 @@ package com.griddynamics.gridquiz.core.service.result;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
+import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.rest.model.DashboardResult;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.util.List;
@@ -17,4 +19,6 @@ public interface ResultService {
      * already completed the quiz returns null.
      */
     Optional<Result> get(UserModel user, String quizId);
+
+    List<DashboardResult> getDashboardResults(UserRegistered user, List<Quiz> quizzes);
 }

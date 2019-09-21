@@ -2,10 +2,14 @@ package com.griddynamics.gridquiz.core.service.result;
 
 import static java.util.Objects.nonNull;
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 
 import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
+import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.rest.model.DashboardResult;
+import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.time.LocalDateTime;
@@ -63,5 +67,21 @@ public class ResultServiceImpl implements ResultService {
                 .approved(false)
                 .build();
         return of(repository.save(firstAttempt));
+    }
+
+    @Override
+    public List<DashboardResult> getDashboardResults(UserRegistered user, List<Quiz> quizzes) {
+        return quizzes.stream().map(q -> {
+            List<Result> results = repository.findTop5ByQuizIdOrderByPointsDesc(q.getId());
+            Optional<Result> currentUserResult =
+                    repository.findFirstByUserIdAndQuizId(user.getId(), q.getId());
+            MiniQuiz miniQuiz = new MiniQuiz(q);
+
+            return DashboardResult.builder()
+                    .miniQuiz(miniQuiz)
+                    .top5results(results)
+                    .currentUserResult(currentUserResult.orElse(null))
+                    .build();
+        }).collect(toList());
     }
 }

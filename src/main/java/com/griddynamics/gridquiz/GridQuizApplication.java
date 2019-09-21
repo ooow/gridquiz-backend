@@ -45,11 +45,11 @@ public class GridQuizApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         //roleRepository.deleteAll();
-        quizRepository.deleteAll();
-        userRepository.deleteAll();
-        questionRepository.deleteAll();
-        resultRepository.deleteAll();
-        init();
+        //quizRepository.deleteAll();
+        //userRepository.deleteAll();
+        //questionRepository.deleteAll();
+        //resultRepository.deleteAll();
+        //init();
     }
 
     private void init() {
