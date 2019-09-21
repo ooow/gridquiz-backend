@@ -11,4 +11,5 @@ public class DashboardResult {
     private MiniQuiz miniQuiz;
     private List<Result> top5results;
     private Result currentUserResult;
+    private int currentUserPlace;
 }

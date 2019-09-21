@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface ResultRepository extends MongoRepository<Result, String> {
     Optional<List<Result>> findAllByApproved(boolean approved);
 
-    Optional<List<Result>> findByQuizId(String quizId);
+    List<Result> findAllByQuizId(String quizId);
 
     List<Result> findAllByUserId(String userId);
 

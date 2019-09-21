@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Request<T> {
-    private UserModel user;
+    private String userId;
     private T message;
 }

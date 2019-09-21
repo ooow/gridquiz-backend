@@ -11,7 +11,7 @@ import com.griddynamics.gridquiz.repository.model.UserRegistered;
 import com.griddynamics.gridquiz.rest.model.DashboardResult;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
-import com.griddynamics.gridquiz.rest.model.UserModel;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +27,10 @@ public class ResultServiceImpl implements ResultService {
     private ResultRepository repository;
 
     @Override
-    public Optional<Result> calculateResult(UserModel user, Quiz quiz, List<Answer> answers) {
+    public Optional<Result> calculateResult(String userId, Quiz quiz, List<Answer> answers) {
         Map<String, String> answersMap = answers.stream()
                 .collect(Collectors.toMap(Answer::getQuestionId, Answer::getAnswer));
-        Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quiz.getId());
+        Optional<Result> result = repository.findFirstByUserIdAndQuizId(userId, quiz.getId());
         if (result.isPresent()) {
             int points = (int) quiz.getQuestions()
                     .stream()
@@ -40,6 +40,8 @@ public class ResultServiceImpl implements ResultService {
             userResult.setPoints(points);
             userResult.setOutOf(quiz.getQuestions().size());
             userResult.setEndTime(LocalDateTime.now());
+            userResult.setSeconds(
+                    getSecondsBetween(userResult.getStartTime(), userResult.getEndTime()));
 
             return of(repository.save(userResult));
         }
@@ -47,8 +49,8 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Optional<Result> get(UserModel user, String quizId) {
-        Optional<Result> result = repository.findFirstByUserIdAndQuizId(user.getId(), quizId);
+    public Optional<Result> get(String userId, String quizId) {
+        Optional<Result> result = repository.findFirstByUserIdAndQuizId(userId, quizId);
 
         if (result.isPresent()) {
             if (nonNull(result.get().getEndTime())) {
@@ -60,8 +62,7 @@ public class ResultServiceImpl implements ResultService {
         }
 
         // The user just starts the quiz.
-        Result firstAttempt = Result.builder()
-                .userId(user.getId())
+        Result firstAttempt = Result.builder().userId(userId)
                 .quizId(quizId)
                 .startTime(LocalDateTime.now())
                 .approved(false)
@@ -72,7 +73,8 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public List<DashboardResult> getDashboardResults(UserRegistered user, List<Quiz> quizzes) {
         return quizzes.stream().map(q -> {
-            List<Result> results = repository.findTop5ByQuizIdOrderByPointsDesc(q.getId());
+            List<Result> results = sortResultsByPointsAndTime(
+                    repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
             Optional<Result> currentUserResult =
                     repository.findFirstByUserIdAndQuizId(user.getId(), q.getId());
             MiniQuiz miniQuiz = new MiniQuiz(q);
@@ -81,7 +83,44 @@ public class ResultServiceImpl implements ResultService {
                     .miniQuiz(miniQuiz)
                     .top5results(results)
                     .currentUserResult(currentUserResult.orElse(null))
+                    .currentUserPlace(getUserPlace(user.getId(), q.getId(), results))
                     .build();
         }).collect(toList());
+    }
+
+    private int getUserPlace(String userId, String quizId, List<Result> top5results) {
+        for (int i = 0; i < top5results.size(); i++) {
+            if (userId.equals(top5results.get(i).getUserId())) {
+                // User's result in top5.
+                return i;
+            }
+        }
+
+        List<Result> allQuizResults = repository.findAllByQuizId(quizId);
+
+        for (int i = 0; i < allQuizResults.size(); i++) {
+            if (userId.equals(allQuizResults.get(i).getUserId())) {
+                // User's result in all quiz results.
+                return i;
+            }
+        }
+
+        // User has not result of this quiz.
+        return -1;
+    }
+
+    private List<Result> sortResultsByPointsAndTime(List<Result> results) {
+        results.sort((a, b) -> {
+            if (a.getPoints() != b.getPoints()) {
+                return Integer.compare(a.getPoints(), b.getPoints());
+            } else {
+                return Long.compare(b.getSeconds(), a.getSeconds());
+            }
+        });
+        return results;
+    }
+
+    private long getSecondsBetween(LocalDateTime start, LocalDateTime end) {
+        return Math.abs(Duration.between(start, end).getSeconds());
     }
 }

@@ -5,12 +5,11 @@ import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.UserRegistered;
 import com.griddynamics.gridquiz.rest.model.DashboardResult;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
-import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.util.List;
 import java.util.Optional;
 
 public interface ResultService {
-    Optional<Result> calculateResult(UserModel user, Quiz quiz, List<Answer> answers);
+    Optional<Result> calculateResult(String userId, Quiz quiz, List<Answer> answers);
 
     /**
      * Controls the user attempts to open the quiz. When the user opens the quiz for the first time
@@ -18,7 +17,7 @@ public interface ResultService {
      * the user opens the quiz it returns stored result to allow continue the quiz. If the user has
      * already completed the quiz returns null.
      */
-    Optional<Result> get(UserModel user, String quizId);
+    Optional<Result> get(String userId, String quizId);
 
     List<DashboardResult> getDashboardResults(UserRegistered user, List<Quiz> quizzes);
 }

@@ -38,7 +38,7 @@ public class ResultController {
         Optional<Quiz> quiz = quizRepository.findById(userAnswers.getMessage().getQuizId());
 
         if (quiz.isPresent()) {
-            return service.calculateResult(userAnswers.getUser(), quiz.get(),
+            return service.calculateResult(userAnswers.getUserId(), quiz.get(),
                                            userAnswers.getMessage().getAnswers()).orElse(null);
         }
         return null; // TODO: handel this case.

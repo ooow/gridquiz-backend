@@ -20,6 +20,7 @@ public class Result {
     private String quizId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private long seconds;
     private int points;
     private int outOf;
     private boolean approved;
