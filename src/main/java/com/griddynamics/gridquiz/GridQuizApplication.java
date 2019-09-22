@@ -44,8 +44,8 @@ public class GridQuizApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        clean();
-        init();
+        //clean();
+        //init();
     }
 
     private void clean() {
@@ -75,10 +75,9 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void initAdmin() {
-        Optional<User> admin = userRepository.findByEmail("admin");
+        Optional<User> admin = userRepository.findByEmail("admin@admin.com");
         if (admin.isEmpty()) {
-            userRepository.save(User.builder()
-                                        .email("admin")
+            userRepository.save(User.builder().email("admin@admin.com")
                                         .name("admin")
                                         .roles(Set.of(roleRepository.findByRole(USER).get(),
                                                       roleRepository.findByRole(ADMIN).get()))

@@ -1,8 +1,5 @@
 package com.griddynamics.gridquiz.repository.model;
 
-import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
-import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
-
 import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.util.List;
 import java.util.Set;
@@ -35,27 +32,9 @@ public class User implements UserDetails {
         this.phone = user.getPhone();
     }
 
-    /** Converts internal user to external for sending to the client. */
-    public UserModel toExternalUser() {
-        return UserModel.builder()
-                .id(id)
-                .email(email)
-                .name(name)
-                .phone(phone)
-                .role(getHighestRole())
-                .build();
-    }
-
     public List<GrantedAuthority> getAuthoritiesList() {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().toString()))
                 .collect(Collectors.toList());
-    }
-
-    private Role.Enum getHighestRole() {
-        if (roles.stream().map(Role::getRole).anyMatch(ADMIN::equals)) {
-            return ADMIN;
-        }
-        return USER;
     }
 
     @Override

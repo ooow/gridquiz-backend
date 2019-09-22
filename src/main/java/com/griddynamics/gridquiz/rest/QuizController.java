@@ -8,9 +8,14 @@ import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import com.griddynamics.gridquiz.rest.model.ProgressModel;
 import com.griddynamics.gridquiz.rest.model.Request;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,16 +41,25 @@ public class QuizController {
         return repository.save(quiz);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+    void handleBadRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
+    }
+
     @PostMapping(value = "/progress")
     @ResponseBody
     public ProgressModel progress(@RequestBody Request<String> request) {
-        Result result =
-                resultService.progress(request.getUserId(), request.getMessage()).orElse(null);
-        // TODO: Handel case when the result already exist.
+        Optional<Result> result = resultService.progress(request.getUserId(), request.getMessage());
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException("The user already has completed the quiz");
+        }
 
-        Quiz quiz = repository.findById(request.getMessage()).orElse(null);
+        Optional<Quiz> quiz = repository.findById(request.getMessage());
+        if (quiz.isEmpty()) {
+            throw new NullPointerException("The quiz is not found");
+        }
 
-        return ProgressModel.builder().quiz(quiz).start(result.getStartTime()).build();
+        return ProgressModel.builder().quiz(quiz.get()).start(result.get().getStartTime()).build();
     }
 
     @PostMapping(value = "/mini")

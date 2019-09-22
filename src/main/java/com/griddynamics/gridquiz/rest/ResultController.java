@@ -9,10 +9,14 @@ import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.model.AnswersModel;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.Request;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,27 +36,36 @@ public class ResultController {
     @Autowired
     private UserRepository userRepository;
 
+    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+    void handleBadRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
+    }
+
     @PostMapping(value = "/submit")
     @ResponseBody
     public Result submit(@RequestBody Request<AnswersModel> userAnswers) {
         Optional<Quiz> quiz = quizRepository.findById(userAnswers.getMessage().getQuizId());
-
-        if (quiz.isPresent()) {
-            return service.calculateResult(userAnswers.getUserId(), quiz.get(),
-                                           userAnswers.getMessage().getAnswers()).orElse(null);
+        if (quiz.isEmpty()) {
+            throw new NullPointerException("The quiz is not found");
         }
-        return null; // TODO: handel this case.
+
+        Optional<Result> result = service.calculateResult(userAnswers.getUserId(), quiz.get(),
+                                                          userAnswers.getMessage().getAnswers());
+        if (result.isEmpty()) {
+            throw new NullPointerException("The user has not started the quiz");
+        }
+        return result.get();
     }
 
     @PostMapping(value = "/dashboards")
     @ResponseBody
     public List<DashboardModel> dashboard(@RequestBody String userId) {
         Optional<User> user = userRepository.findById(userId);
-
-        if (user.isPresent()) {
-            List<Quiz> quizzes = quizRepository.findAll();
-            return service.getDashboardResults(user.get().getId(), quizzes);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("The user is not found");
         }
-        return null; // TODO: handel this case.
+
+        List<Quiz> quizzes = quizRepository.findAll();
+        return service.getDashboardResults(user.get().getId(), quizzes);
     }
 }
