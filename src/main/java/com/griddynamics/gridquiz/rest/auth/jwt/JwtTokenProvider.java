@@ -22,11 +22,11 @@ import org.springframework.stereotype.Component;
 @Component
 public final class JwtTokenProvider {
 
-    @Value("${security.jwt.token.secret-key:secret}")
-    private String secretKey = "secret";
+    @Value("${security.jwt.token.secret-key:wme9713ncl}")
+    private String secretKey = "wme9713ncl";
 
-    @Value("${security.jwt.token.expire-length:3600000}")
-    private long validityInMilliseconds = 12 * 3600000; // 12h
+    @Value("${security.jwt.token.expire-length:43200000}")
+    private long validityInMilliseconds = 43200000; // 12h
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
