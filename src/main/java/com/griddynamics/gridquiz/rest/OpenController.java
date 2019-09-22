@@ -1,7 +1,9 @@
 package com.griddynamics.gridquiz.rest;
 
-import com.griddynamics.gridquiz.api.models.dashboard.DashboardModel;
 import com.griddynamics.gridquiz.core.service.quiz.QuizService;
+import com.griddynamics.gridquiz.core.service.result.ResultService;
+import com.griddynamics.gridquiz.repository.QuizRepository;
+import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +21,21 @@ public class OpenController {
     @Autowired
     private QuizService quizService;
 
+    @Autowired
+    private ResultService resultService;
+
+    @Autowired
+    private QuizRepository quizRepository;
+
     @GetMapping(value = "/mini")
     @ResponseBody
     public List<MiniQuiz> quizzes() {
         return quizService.getAllMiniQuizzes();
     }
 
-    @GetMapping(value = "/dashboard")
+    @GetMapping(value = "/dashboards")
     @ResponseBody
-    public List<DashboardModel> dashboard() {
-        return null; //quizResultService.generateDashboard();
+    public List<DashboardModel> dashboards() {
+        return resultService.getDashboards(quizRepository.findAll());
     }
 }

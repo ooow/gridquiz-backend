@@ -1,6 +1,7 @@
 package com.griddynamics.gridquiz.core.service.result;
 
 import static java.util.Objects.nonNull;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
@@ -8,11 +9,13 @@ import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.UserRegistered;
-import com.griddynamics.gridquiz.rest.model.DashboardResult;
+import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.MiniQuiz;
+import com.griddynamics.gridquiz.rest.model.ResultModel;
 import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,17 +48,17 @@ public class ResultServiceImpl implements ResultService {
 
             return of(repository.save(userResult));
         }
-        return Optional.empty();
+        return empty();
     }
 
     @Override
-    public Optional<Result> get(String userId, String quizId) {
+    public Optional<Result> progress(String userId, String quizId) {
         Optional<Result> result = repository.findFirstByUserIdAndQuizId(userId, quizId);
 
         if (result.isPresent()) {
             if (nonNull(result.get().getEndTime())) {
                 // The user has already completed the quiz.
-                return Optional.empty();
+                return empty();
             }
             // The user still in progress.
             return result;
@@ -65,48 +68,63 @@ public class ResultServiceImpl implements ResultService {
         Result firstAttempt = Result.builder().userId(userId)
                 .quizId(quizId)
                 .startTime(LocalDateTime.now())
-                .approved(false)
                 .build();
         return of(repository.save(firstAttempt));
     }
 
     @Override
-    public List<DashboardResult> getDashboardResults(UserRegistered user, List<Quiz> quizzes) {
+    public List<DashboardModel> getDashboardResults(UserRegistered user, List<Quiz> quizzes) {
         return quizzes.stream().map(q -> {
             List<Result> results = sortResultsByPointsAndTime(
                     repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
-            Optional<Result> currentUserResult =
-                    repository.findFirstByUserIdAndQuizId(user.getId(), q.getId());
             MiniQuiz miniQuiz = new MiniQuiz(q);
 
-            return DashboardResult.builder()
+            List<ResultModel> resultModels = new ArrayList<>();
+            for (int i = 0; i < results.size(); i++) {
+                Result res = results.get(i);
+                ResultModel model = new ResultModel(res);
+                model.setHighlighted(res.getUserId().equals(user.getId()));
+                model.setPlace(i + 1); // Starts from 1.
+                resultModels.add(model);
+            }
+
+            if (resultModels.stream().noneMatch(r -> user.getId().equals(r.getUserId()))) {
+                getUserResult(user.getId(), q.getId()).ifPresent(resultModels::add);
+            }
+
+            return DashboardModel.builder().miniQuiz(miniQuiz).results(resultModels).build();
+        }).collect(toList());
+    }
+
+    @Override
+    public List<DashboardModel> getDashboards(List<Quiz> quizzes) {
+        return quizzes.stream().map(q -> {
+            List<Result> results = sortResultsByPointsAndTime(
+                    repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
+            MiniQuiz miniQuiz = new MiniQuiz(q);
+
+            return DashboardModel.builder()
                     .miniQuiz(miniQuiz)
-                    .top5results(results)
-                    .currentUserResult(currentUserResult.orElse(null))
-                    .currentUserPlace(getUserPlace(user.getId(), q.getId(), results))
+                    .results(results.stream().map(ResultModel::new).collect(toList()))
                     .build();
         }).collect(toList());
     }
 
-    private int getUserPlace(String userId, String quizId, List<Result> top5results) {
-        for (int i = 0; i < top5results.size(); i++) {
-            if (userId.equals(top5results.get(i).getUserId())) {
-                // User's result in top5.
-                return i;
-            }
-        }
-
+    private Optional<ResultModel> getUserResult(String userId, String quizId) {
         List<Result> allQuizResults = repository.findAllByQuizId(quizId);
 
         for (int i = 0; i < allQuizResults.size(); i++) {
             if (userId.equals(allQuizResults.get(i).getUserId())) {
                 // User's result in all quiz results.
-                return i;
+                ResultModel model = new ResultModel(allQuizResults.get(i));
+                model.setHighlighted(true);
+                model.setPlace(i + 1); // Starts from 1.
+                return of(model);
             }
         }
 
         // User has not result of this quiz.
-        return -1;
+        return empty();
     }
 
     private List<Result> sortResultsByPointsAndTime(List<Result> results) {

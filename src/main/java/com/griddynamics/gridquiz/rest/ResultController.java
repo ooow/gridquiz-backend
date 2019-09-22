@@ -6,7 +6,7 @@ import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
 import com.griddynamics.gridquiz.repository.model.UserRegistered;
-import com.griddynamics.gridquiz.rest.model.DashboardResult;
+import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.Request;
 import com.griddynamics.gridquiz.rest.model.UserAnswers;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ResultController {
 
     @PostMapping(value = "/dashboards")
     @ResponseBody
-    public List<DashboardResult> dashboard(@RequestBody String userId) {
+    public List<DashboardModel> dashboard(@RequestBody String userId) {
         Optional<UserRegistered> user = userRepository.findById(userId);
 
         if (user.isPresent()) {
