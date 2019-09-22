@@ -5,8 +5,8 @@ import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.rest.model.MiniQuiz;
-import com.griddynamics.gridquiz.rest.model.Progress;
+import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
+import com.griddynamics.gridquiz.rest.model.ProgressModel;
 import com.griddynamics.gridquiz.rest.model.Request;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,19 +38,19 @@ public class QuizController {
 
     @PostMapping(value = "/progress")
     @ResponseBody
-    public Progress progress(@RequestBody Request<String> request) {
+    public ProgressModel progress(@RequestBody Request<String> request) {
         Result result =
                 resultService.progress(request.getUserId(), request.getMessage()).orElse(null);
         // TODO: Handel case when the result already exist.
 
         Quiz quiz = repository.findById(request.getMessage()).orElse(null);
 
-        return Progress.builder().quiz(quiz).start(result.getStartTime()).build();
+        return ProgressModel.builder().quiz(quiz).start(result.getStartTime()).build();
     }
 
     @PostMapping(value = "/mini")
     @ResponseBody
-    public List<MiniQuiz> miniQuizzes(@RequestBody String userId) {
+    public List<MiniQuizModel> miniQuizzes(@RequestBody String userId) {
         return quizService.getUserMiniQuizzes(userId);
     }
 }

@@ -1,12 +1,12 @@
 package com.griddynamics.gridquiz.core.service.quiz;
 
-import com.griddynamics.gridquiz.rest.model.MiniQuiz;
+import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import java.util.List;
 
 public interface QuizService {
-    List<MiniQuiz> getAllMiniQuizzes();
+    List<MiniQuizModel> getAllMiniQuizzes();
 
-    List<MiniQuiz> getUserMiniQuizzes(String userId);
+    List<MiniQuizModel> getUserMiniQuizzes(String userId);
 
     //    List<DashboardModel> generateDashboard();
     //

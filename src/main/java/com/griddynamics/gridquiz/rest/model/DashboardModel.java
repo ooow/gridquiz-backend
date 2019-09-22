@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class DashboardModel {
-    private MiniQuiz miniQuiz;
+    private MiniQuizModel miniQuiz;
     private List<ResultModel> results;
 }

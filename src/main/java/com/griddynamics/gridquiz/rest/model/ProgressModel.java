@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Progress {
+public class ProgressModel {
     private Quiz quiz;
     private LocalDateTime start;
 }

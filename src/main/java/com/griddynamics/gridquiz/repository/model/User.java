@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistered implements UserDetails {
+public class User implements UserDetails {
     @Id
     private String id;
     private String name;
@@ -28,7 +28,7 @@ public class UserRegistered implements UserDetails {
     private String phone;
     private Set<Role> roles;
 
-    public UserRegistered(UserModel user) {
+    public User(UserModel user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();

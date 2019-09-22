@@ -1,6 +1,6 @@
 package com.griddynamics.gridquiz.rest.auth.jwt;
 
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.auth.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -36,7 +36,7 @@ public final class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(UserRegistered user) {
+    public String createToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("roles", Arrays.toString(user.getRoles().toArray()));
         Date now = new Date();

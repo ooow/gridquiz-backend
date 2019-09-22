@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MiniQuiz {
+public class MiniQuizModel {
     private String id;
     private String name;
     private String description;
@@ -19,7 +19,7 @@ public class MiniQuiz {
     private int questionsComplete;
     private boolean attempt;
 
-    public MiniQuiz(Quiz quiz) {
+    public MiniQuizModel(Quiz quiz) {
         this.id = quiz.getId();
         this.name = quiz.getName();
         this.description = quiz.getDescription();

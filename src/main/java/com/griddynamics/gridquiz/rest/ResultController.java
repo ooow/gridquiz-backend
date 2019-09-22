@@ -5,10 +5,10 @@ import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.repository.model.User;
+import com.griddynamics.gridquiz.rest.model.AnswersModel;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.Request;
-import com.griddynamics.gridquiz.rest.model.UserAnswers;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class ResultController {
 
     @PostMapping(value = "/submit")
     @ResponseBody
-    public Result submit(@RequestBody Request<UserAnswers> userAnswers) {
+    public Result submit(@RequestBody Request<AnswersModel> userAnswers) {
         Optional<Quiz> quiz = quizRepository.findById(userAnswers.getMessage().getQuizId());
 
         if (quiz.isPresent()) {
@@ -47,11 +47,11 @@ public class ResultController {
     @PostMapping(value = "/dashboards")
     @ResponseBody
     public List<DashboardModel> dashboard(@RequestBody String userId) {
-        Optional<UserRegistered> user = userRepository.findById(userId);
+        Optional<User> user = userRepository.findById(userId);
 
         if (user.isPresent()) {
             List<Quiz> quizzes = quizRepository.findAll();
-            return service.getDashboardResults(user.get(), quizzes);
+            return service.getDashboardResults(user.get().getId(), quizzes);
         }
         return null; // TODO: handel this case.
     }

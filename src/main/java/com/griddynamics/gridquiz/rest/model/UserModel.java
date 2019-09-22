@@ -12,4 +12,5 @@ public class UserModel {
     private String email;
     private String phone;
     private Role.Enum role;
+    private String token;
 }

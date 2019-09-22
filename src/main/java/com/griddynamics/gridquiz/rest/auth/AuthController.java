@@ -1,9 +1,8 @@
 package com.griddynamics.gridquiz.rest.auth;
 
 import com.griddynamics.gridquiz.repository.UserRepository;
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.auth.jwt.JwtTokenProvider;
-import com.griddynamics.gridquiz.rest.model.Response;
 import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,13 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public Response login(@RequestBody UserModel userModel) {
-        UserRegistered user;
-        Optional<UserRegistered> registered = userRepository.findByEmail(userModel.getEmail());
-        user = registered.orElseGet(() -> service.saveUser(new UserRegistered(userModel)));
+    public UserModel login(@RequestBody UserModel userModel) {
+        User user;
+        Optional<User> registered = userRepository.findByEmail(userModel.getEmail());
+        user = registered.orElseGet(() -> service.saveUser(new User(userModel)));
         String token = jwtTokenProvider.createToken(user);
-        return Response.builder().user(user.toExternalUser()).message(token).build();
+        UserModel registeredModel = user.toExternalUser();
+        registeredModel.setToken(token);
+        return registeredModel;
     }
 }

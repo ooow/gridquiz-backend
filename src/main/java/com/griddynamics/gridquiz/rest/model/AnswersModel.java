@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserAnswers {
+public class AnswersModel {
     private String quizId;
     /** Map represents a collections of questionId and user answers. */
     private List<Answer> answers;

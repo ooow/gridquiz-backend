@@ -8,11 +8,10 @@ import static java.util.stream.Collectors.toList;
 import com.griddynamics.gridquiz.repository.ResultRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.rest.model.AnswersModel.Answer;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
-import com.griddynamics.gridquiz.rest.model.MiniQuiz;
+import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import com.griddynamics.gridquiz.rest.model.ResultModel;
-import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,23 +72,23 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public List<DashboardModel> getDashboardResults(UserRegistered user, List<Quiz> quizzes) {
+    public List<DashboardModel> getDashboardResults(String userId, List<Quiz> quizzes) {
         return quizzes.stream().map(q -> {
             List<Result> results = sortResultsByPointsAndTime(
                     repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
-            MiniQuiz miniQuiz = new MiniQuiz(q);
+            MiniQuizModel miniQuiz = new MiniQuizModel(q);
 
             List<ResultModel> resultModels = new ArrayList<>();
             for (int i = 0; i < results.size(); i++) {
                 Result res = results.get(i);
                 ResultModel model = new ResultModel(res);
-                model.setHighlighted(res.getUserId().equals(user.getId()));
+                model.setHighlighted(res.getUserId().equals(userId));
                 model.setPlace(i + 1); // Starts from 1.
                 resultModels.add(model);
             }
 
-            if (resultModels.stream().noneMatch(r -> user.getId().equals(r.getUserId()))) {
-                getUserResult(user.getId(), q.getId()).ifPresent(resultModels::add);
+            if (resultModels.stream().noneMatch(r -> userId.equals(r.getUserId()))) {
+                getUserResult(userId, q.getId()).ifPresent(resultModels::add);
             }
 
             return DashboardModel.builder().miniQuiz(miniQuiz).results(resultModels).build();
@@ -101,7 +100,7 @@ public class ResultServiceImpl implements ResultService {
         return quizzes.stream().map(q -> {
             List<Result> results = sortResultsByPointsAndTime(
                     repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
-            MiniQuiz miniQuiz = new MiniQuiz(q);
+            MiniQuizModel miniQuiz = new MiniQuizModel(q);
 
             return DashboardModel.builder()
                     .miniQuiz(miniQuiz)

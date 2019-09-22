@@ -2,9 +2,8 @@ package com.griddynamics.gridquiz.core.service.result;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.rest.model.AnswersModel.Answer;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
-import com.griddynamics.gridquiz.rest.model.UserAnswers.Answer;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public interface ResultService {
      */
     Optional<Result> progress(String userId, String quizId);
 
-    List<DashboardModel> getDashboardResults(UserRegistered user, List<Quiz> quizzes);
+    List<DashboardModel> getDashboardResults(String userId, List<Quiz> quizzes);
 
     List<DashboardModel> getDashboards(List<Quiz> quizzes);
 }

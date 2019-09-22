@@ -11,7 +11,7 @@ import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Question;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Role;
-import com.griddynamics.gridquiz.repository.model.UserRegistered;
+import com.griddynamics.gridquiz.repository.model.User;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,8 +44,8 @@ public class GridQuizApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        //clean();
-        //init();
+        clean();
+        init();
     }
 
     private void clean() {
@@ -75,9 +75,9 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void initAdmin() {
-        Optional<UserRegistered> admin = userRepository.findByEmail("admin");
+        Optional<User> admin = userRepository.findByEmail("admin");
         if (admin.isEmpty()) {
-            userRepository.save(UserRegistered.builder()
+            userRepository.save(User.builder()
                                         .email("admin")
                                         .name("admin")
                                         .roles(Set.of(roleRepository.findByRole(USER).get(),

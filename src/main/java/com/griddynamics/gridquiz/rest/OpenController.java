@@ -4,7 +4,7 @@ import com.griddynamics.gridquiz.core.service.quiz.QuizService;
 import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
-import com.griddynamics.gridquiz.rest.model.MiniQuiz;
+import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +29,7 @@ public class OpenController {
 
     @GetMapping(value = "/mini")
     @ResponseBody
-    public List<MiniQuiz> quizzes() {
+    public List<MiniQuizModel> quizzes() {
         return quizService.getAllMiniQuizzes();
     }
 
