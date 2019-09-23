@@ -134,9 +134,9 @@ public class ResultServiceImpl implements ResultService {
     private List<Result> sortResultsByPointsAndTime(List<Result> results) {
         results.sort((a, b) -> {
             if (a.getPoints() != b.getPoints()) {
-                return Integer.compare(a.getPoints(), b.getPoints());
+                return Integer.compare(a.getPoints(), b.getPoints()) * -1; // Desc
             } else {
-                return Long.compare(b.getSeconds(), a.getSeconds());
+                return Long.compare(b.getSeconds(), a.getSeconds()) * -1; // Desc
             }
         });
         return results;
