@@ -102,10 +102,15 @@ public class ResultServiceImpl implements ResultService {
                     repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
             MiniQuizModel miniQuiz = new MiniQuizModel(q);
 
-            return DashboardModel.builder()
-                    .miniQuiz(miniQuiz)
-                    .results(results.stream().map(ResultModel::new).collect(toList()))
-                    .build();
+            List<ResultModel> resultModels = new ArrayList<>();
+            for (int i = 0; i < results.size(); i++) {
+                Result res = results.get(i);
+                ResultModel model = new ResultModel(res);
+                model.setPlace(i + 1); // Starts from 1.
+                resultModels.add(model);
+            }
+
+            return DashboardModel.builder().miniQuiz(miniQuiz).results(resultModels).build();
         }).collect(toList());
     }
 
