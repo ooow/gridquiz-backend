@@ -18,16 +18,8 @@ public class Question {
     @Id
     private String id;
     private String text;
-    private String title;
+    private String code;
     private List<String> answers;
-    private QuestionType type = QuestionType.TEXT;
     @JsonIgnore
     private String correctAnswer;
-
-    // TODO: Make it private.
-    public enum QuestionType {
-        TEXT,
-        CODE,
-        INPUT
-    }
 }

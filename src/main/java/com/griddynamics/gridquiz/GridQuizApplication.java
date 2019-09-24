@@ -87,14 +87,13 @@ public class GridQuizApplication implements CommandLineRunner {
     }
 
     private void initDevOpsQuiz() {
-        Question one = Question.builder()
-                .title("DevOps is")
+        Question one = Question.builder().text("DevOps is")
                 .answers(List.of("Culture", "Role", "Team", "Application"))
                 .correctAnswer("Culture")
                 .build();
 
         Question two = Question.builder()
-                .title("What is the command in Docker to list all running containers?")
+                .text("What is the command in Docker to list all running containers?")
                 .answers(List.of("docker list", "docker containers list", "docker ps",
                                  "docker list cs"))
                 .correctAnswer("docker ps")
@@ -114,8 +113,8 @@ public class GridQuizApplication implements CommandLineRunner {
 
     private void initJavaQuiz() {
         Question one = Question.builder()
-                .title("What is the result ?")
-                .text("public class Vitamins {\n" + "\tpublic static void main(String[] args) {\n"
+                .text("What is the result ?")
+                .code("public class Vitamins {\n" + "\tpublic static void main(String[] args) {\n"
                               + "\t\tList<String> vitamins = new ArrayList<>();\n"
                               + "\t\tvitamins.add(\"A\");\n" + "\t\tvitamins.add(\"B12\");\n"
                               + "\t\tvitamins.add(\"C\");\n" + "\t\tvitamins.set(1, \"B\");\n"
@@ -126,8 +125,8 @@ public class GridQuizApplication implements CommandLineRunner {
                 .build();
 
         Question two = Question.builder()
-                .title("Which statement is true about this code ?")
-                .text("class Engine {\n" + "}\n" + " \n" + "public class App {\n"
+                .text("Which statement is true about this code ?")
+                .code("class Engine {\n" + "}\n" + " \n" + "public class App {\n"
                               + "\tpublic static void main(String[] args) {\n"
                               + "\t\tEngine e = new Engine();\n" + "\t\tEngine e1 = e;\n"
                               + "\t\te = null;\n" + "\t}\n" + "}\n")
@@ -153,13 +152,13 @@ public class GridQuizApplication implements CommandLineRunner {
 
     private void initGeneralQuiz() {
         Question one = Question.builder()
-                .title("Grid Dynamics is an Exclusive Partner for Lviv IT Arena. Select our technology")
+                .text("Grid Dynamics is an Exclusive Partner for Lviv IT Arena. Select our technology")
                 .answers(List.of("Gamedev", "Cloud", "ProductDev"))
                 .correctAnswer("Cloud")
                 .build();
 
         Question two = Question.builder()
-                .title("Stop by our booth and attend Live Demo session. Complete the secret phrase provided by a speaker at the end of the session: \"Artificial Intelligence is the ...\"")
+                .text("Stop by our booth and attend Live Demo session. Complete the secret phrase provided by a speaker at the end of the session: \"Artificial Intelligence is the ...\"")
                 .answers(List.of("Past", "Future", "Problem"))
                 .correctAnswer("Future")
                 .build();
