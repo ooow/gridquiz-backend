@@ -8,11 +8,15 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface ResultRepository extends MongoRepository<Result, String> {
     List<Result> findAllByQuizId(String quizId);
 
+    List<Result> findAllByQuizIdAndAndEndTimeIsNotNull(String quizId);
+
     List<Result> findAllByUserId(String userId);
 
     Optional<Result> findFirstByUserIdAndQuizId(String userId, String quizId);
 
     List<Result> findTop5ByQuizIdOrderByPointsDesc(String quizId);
+
+    List<Result> findTop5ByQuizIdAndEndTimeIsNotNullOrderByPointsDesc(String quizId);
 
     Optional<List<Result>> removeByQuizId(String quizId);
 

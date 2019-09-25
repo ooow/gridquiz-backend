@@ -75,7 +75,7 @@ public class ResultServiceImpl implements ResultService {
     public List<DashboardModel> getDashboardResults(String userId, List<Quiz> quizzes) {
         return quizzes.stream().map(q -> {
             List<Result> results = sortResultsByPointsAndTime(
-                    repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
+                    repository.findTop5ByQuizIdAndEndTimeIsNotNullOrderByPointsDesc(q.getId()));
             MiniQuizModel miniQuiz = new MiniQuizModel(q);
 
             List<ResultModel> resultModels = new ArrayList<>();
@@ -99,7 +99,7 @@ public class ResultServiceImpl implements ResultService {
     public List<DashboardModel> getDashboards(List<Quiz> quizzes) {
         return quizzes.stream().map(q -> {
             List<Result> results = sortResultsByPointsAndTime(
-                    repository.findTop5ByQuizIdOrderByPointsDesc(q.getId()));
+                    repository.findTop5ByQuizIdAndEndTimeIsNotNullOrderByPointsDesc(q.getId()));
             MiniQuizModel miniQuiz = new MiniQuizModel(q);
 
             List<ResultModel> resultModels = new ArrayList<>();
@@ -115,7 +115,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private Optional<ResultModel> getUserResult(String userId, String quizId) {
-        List<Result> allQuizResults = repository.findAllByQuizId(quizId);
+        List<Result> allQuizResults = repository.findAllByQuizIdAndAndEndTimeIsNotNull(quizId);
 
         for (int i = 0; i < allQuizResults.size(); i++) {
             if (userId.equals(allQuizResults.get(i).getUserId())) {
