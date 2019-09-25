@@ -7,12 +7,4 @@ public interface QuizService {
     List<MiniQuizModel> getAllMiniQuizzes();
 
     List<MiniQuizModel> getUserMiniQuizzes(String userId);
-
-    //    List<DashboardModel> generateDashboard();
-    //
-    //    List<NonApprovedModel> nonApproved();
-    //
-    //    List<UserDashboardResultModel> getUsers();
-    //
-    //    List<UserResultsModel> getUserResults();
 }

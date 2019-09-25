@@ -24,10 +24,7 @@
         <project.reporting.outputEncoding>UTF-8
         </project.reporting.outputEncoding>
         <java.version>12</java.version>
-        <jool.version>0.9.12</jool.version>
         <lombok.version>1.18.10</lombok.version>
-        <poi.version>3.17</poi.version>
-        <commons-io.version>2.5</commons-io.version>
     </properties>
 
     <dependencies>
@@ -56,12 +53,6 @@
 
         <!--Common-->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jool</artifactId>
-            <version>${jool.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -71,19 +62,19 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
+            <version>4.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
+            <version>4.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <version>2.6</version>
         </dependency>
 
         <dependency>

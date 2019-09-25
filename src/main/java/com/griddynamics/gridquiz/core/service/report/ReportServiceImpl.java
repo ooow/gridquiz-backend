@@ -1,10 +1,26 @@
 package com.griddynamics.gridquiz.core.service.report;
 
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
+import static java.util.stream.Collectors.toMap;
+
+import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.ResultRepository;
+import com.griddynamics.gridquiz.repository.RoleRepository;
+import com.griddynamics.gridquiz.repository.UserRepository;
+import com.griddynamics.gridquiz.repository.model.Quiz;
+import com.griddynamics.gridquiz.repository.model.Result;
+import com.griddynamics.gridquiz.repository.model.Role;
+import com.griddynamics.gridquiz.repository.model.User;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -23,113 +39,86 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportServiceImpl implements ReportService {
     private XSSFWorkbook book;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+            .withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
 
     @Autowired
-    private ResultRepository repository;
+    private ResultRepository resultRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private QuizRepository quizRepository;
 
     @Override
-    public byte[] generateReport() throws IOException {
+    public byte[] generateReport() {
         book = new XSSFWorkbook();
 
-        XSSFSheet sheet = book.createSheet("GridQuiz Report + " + LocalDate.now());
+        // Create sheet
+        XSSFSheet sheet = book.createSheet(String.format("GridQuiz Report $s", LocalDate.now()));
+
+        // Add header row
         createHeader(sheet);
 
-        //TODO: Fix.
-        //        seq(repository.findAll()).zipWithIndex().forEach(ri -> {
-        //            int index = Math.toIntExact(ri.v2) + 1;
-        //            UserResultsModel ur = ri.v1;
-        //            XSSFRow row = sheet.createRow(index);
-        //
-        //            int j = 0;
-        //            XSSFCell id = row.createCell(j);
-        //            id.setCellValue(ur.getUser().getId());
-        //            XSSFCellStyle idStyle = defaultStyle();
-        //            idStyle.setAlignment(HorizontalAlignment.RIGHT);
-        //            idStyle.setFont(numberFont());
-        //            id.setCellStyle(idStyle);
-        //            j++;
-        //
-        //            XSSFCell name = row.createCell(j);
-        //            name.setCellValue(ur.getUser().getName());
-        //            XSSFCellStyle nameStyle = defaultStyle();
-        //            nameStyle.setAlignment(HorizontalAlignment.RIGHT);
-        //            name.setCellStyle(nameStyle);
-        //            j++;
-        //
-        //            XSSFCell email = row.createCell(j);
-        //            email.setCellValue(ur.getUser().getEmail());
-        //            XSSFCellStyle emailStyle = defaultStyle();
-        //            emailStyle.setAlignment(HorizontalAlignment.RIGHT);
-        //            email.setCellStyle(emailStyle);
-        //            j++;
-        //
-        //            XSSFCell phone = row.createCell(j);
-        //            phone.setCellValue(ur.getUser().getPhone());
-        //            XSSFCellStyle phoneStyle = defaultStyle();
-        //            phoneStyle.setAlignment(HorizontalAlignment.RIGHT);
-        //            phoneStyle.setFont(numberFont());
-        //            phone.setCellStyle(phoneStyle);
-        //            j++;
-        //
-        //            XSSFCell cell1 = row.createCell(j);
-        //            cell1.setCellStyle(nameStyle);
-        //            j++;
-        //
-        //            XSSFCell cell2 = row.createCell(j);
-        //            cell2.setCellStyle(nameStyle);
-        //            j++;
-        //
-        //            XSSFCell cell3 = row.createCell(j);
-        //            cell3.setCellStyle(nameStyle);
-        //            j++;
-        //
-        //            j -= 3;
-        //
-        //            int generalJ = j;
-        //            seq(ur.getResults()).filter(r -> "General".equals(r.getQuiz().getName()))
-        //                    .findFirst()
-        //                    .ifPresent(r -> {
-        //                        XSSFCell general = row.createCell(generalJ);
-        //                        general.setCellValue(r.getPoints() + "\t[" + toMinutes(
-        //                                getResultTime(r.getStartTime(), r.getEndTime())) + "]");
-        //                        XSSFCellStyle generalStyle = defaultStyle();
-        //                        generalStyle.setFont(general());
-        //                        general.setCellStyle(generalStyle);
-        //                    });
-        //            j++;
-        //            int javaJ = j;
-        //            seq(ur.getResults()).filter(r -> "Java".equals(r.getQuiz().getName()))
-        //                    .findFirst()
-        //                    .ifPresent(r -> {
-        //                        XSSFCell java = row.createCell(javaJ);
-        //                        java.setCellValue(r.getPoints() + "\t[" + toMinutes(
-        //                                getResultTime(r.getStartTime(), r.getEndTime())) + "]");
-        //                        XSSFCellStyle javaStyle = defaultStyle();
-        //                        javaStyle.setFont(java());
-        //                        java.setCellStyle(javaStyle);
-        //                    });
-        //            j++;
-        //            int devopsJ = j;
-        //            seq(ur.getResults()).filter(r -> "DevOps".equals(r.getQuiz().getName()))
-        //                    .findFirst()
-        //                    .ifPresent(r -> {
-        //                        XSSFCell devops = row.createCell(devopsJ);
-        //                        devops.setCellValue(r.getPoints() + "\t[" + toMinutes(
-        //                                getResultTime(r.getStartTime(), r.getEndTime())) + "]");
-        //                        XSSFCellStyle devopsStyle = defaultStyle();
-        //                        devopsStyle.setFont(devops());
-        //                        devops.setCellStyle(devopsStyle);
-        //                    });
-        //        });
-        //
-        //        for (int i = 0; i < 7; i++) {
-        //            sheet.autoSizeColumn(i, true);
-        //        }
+        // Get quizzes map<ID, Name>
+        Role admin = roleRepository.findByRole(ADMIN).get();
+        Map<String, String> quizzes =
+                quizRepository.findAll().stream().collect(toMap(Quiz::getId, Quiz::getName));
+
+        // Find all users results
+        Map<User, List<Result>> reports = userRepository.findAll()
+                .stream()
+                .filter(u -> !u.getRoles().contains(admin))
+                .collect(toMap(u -> u, u -> resultRepository.findAllByUserId(u.getId())));
+
+        populateRows(sheet, reports, quizzes);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        book.write(bos);
-        book.close();
+        try {
+            book.write(bos);
+            book.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return bos.toByteArray();
+    }
+
+    private void populateRows(XSSFSheet sheet,
+                              Map<User, List<Result>> reports,
+                              Map<String, String> quizzes) {
+        int columnsSize = 0; // Columns size depends on passed quizzes and results.
+        int index = 1; // Start after header row.
+        for (Map.Entry<User, List<Result>> report : reports.entrySet()) {
+            XSSFRow row = sheet.createRow(index + 1);
+            User user = report.getKey();
+            List<Result> results = report.getValue();
+            fillCell(row, 0, user.getId());
+            fillCell(row, 1, user.getName());
+            fillCell(row, 2, user.getEmail());
+            fillCell(row, 3, user.getPhone());
+            int j = 4;
+            for (Result result : results) {
+                String quizName = quizzes.get(result.getQuizId());
+                String dateTime = formatter.format(result.getStartTime());
+                String r = String.format("%s [%s: %s/%s]", dateTime, quizName, result.getPoints(),
+                                         result.getOutOf());
+                fillCell(row, j, r);
+                j++;
+                if (j > columnsSize) {
+                    columnsSize = j;
+                }
+            }
+            index++;
+        }
+
+        for (int i = 0; i < columnsSize; i++) {
+            sheet.autoSizeColumn(i, true);
+        }
     }
 
     private void createHeader(XSSFSheet sheet) {
@@ -153,19 +142,14 @@ public class ReportServiceImpl implements ReportService {
         phone.setCellStyle(defaultStyle);
 
         XSSFCell general = row.createCell(4);
-        general.setCellValue("General");
-        defaultStyle.setFont(general());
+        general.setCellValue("Results");
         general.setCellStyle(defaultStyle);
+    }
 
-        XSSFCell java = row.createCell(5);
-        java.setCellValue("Java");
-        defaultStyle.setFont(java());
-        java.setCellStyle(defaultStyle);
-
-        XSSFCell devops = row.createCell(6);
-        devops.setCellValue("DevOps");
-        defaultStyle.setFont(devops());
-        devops.setCellStyle(defaultStyle);
+    private void fillCell(XSSFRow row, int column, String value) {
+        XSSFCell cell = row.createCell(column);
+        cell.setCellValue(value);
+        cell.setCellStyle(defaultStyle());
     }
 
     private XSSFCellStyle defaultStyle() {
@@ -173,7 +157,7 @@ public class ReportServiceImpl implements ReportService {
 
         style.setWrapText(true);
 
-        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setAlignment(HorizontalAlignment.LEFT);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
 
         style.setBorderTop(BorderStyle.THIN);
@@ -200,38 +184,6 @@ public class ReportServiceImpl implements ReportService {
         f.setFontName("Helvetica");
         f.setFontHeightInPoints((short) 10);
         f.setColor(new XSSFColor(new Color(169, 183, 198)));
-        return f;
-    }
-
-    private XSSFFont numberFont() {
-        XSSFFont f = book.createFont();
-        f.setFontName("Helvetica");
-        f.setFontHeightInPoints((short) 10);
-        f.setColor(new XSSFColor(new Color(104, 151, 187)));
-        return f;
-    }
-
-    private XSSFFont general() {
-        XSSFFont f = book.createFont();
-        f.setFontName("Helvetica");
-        f.setFontHeightInPoints((short) 10);
-        f.setColor(new XSSFColor(new Color(106, 168, 79)));
-        return f;
-    }
-
-    private XSSFFont java() {
-        XSSFFont f = book.createFont();
-        f.setFontName("Helvetica");
-        f.setFontHeightInPoints((short) 10);
-        f.setColor(new XSSFColor(new Color(109, 158, 235)));
-        return f;
-    }
-
-    private XSSFFont devops() {
-        XSSFFont f = book.createFont();
-        f.setFontName("Helvetica");
-        f.setFontHeightInPoints((short) 10);
-        f.setColor(new XSSFColor(new Color(255, 217, 102)));
         return f;
     }
 }
