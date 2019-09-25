@@ -1,7 +1,7 @@
 package com.griddynamics.gridquiz.rest.model;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import lombok.Data;
 @Builder
 public class ProgressModel {
     private Quiz quiz;
-    private LocalDateTime start;
+    private Instant start;
 }

@@ -13,7 +13,7 @@ import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import com.griddynamics.gridquiz.rest.model.ResultModel;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ResultServiceImpl implements ResultService {
             Result userResult = result.get();
             userResult.setPoints(points);
             userResult.setOutOf(quiz.getQuestions().size());
-            userResult.setEndTime(LocalDateTime.now());
+            userResult.setEndTime(Instant.now());
             userResult.setSeconds(
                     getSecondsBetween(userResult.getStartTime(), userResult.getEndTime()));
 
@@ -64,10 +64,8 @@ public class ResultServiceImpl implements ResultService {
         }
 
         // The user just starts the quiz.
-        Result firstAttempt = Result.builder().userId(userId)
-                .quizId(quizId)
-                .startTime(LocalDateTime.now())
-                .build();
+        Result firstAttempt =
+                Result.builder().userId(userId).quizId(quizId).startTime(Instant.now()).build();
         return of(repository.save(firstAttempt));
     }
 
@@ -142,7 +140,7 @@ public class ResultServiceImpl implements ResultService {
         return results;
     }
 
-    private long getSecondsBetween(LocalDateTime start, LocalDateTime end) {
+    private long getSecondsBetween(Instant start, Instant end) {
         return Math.abs(Duration.between(start, end).getSeconds());
     }
 }

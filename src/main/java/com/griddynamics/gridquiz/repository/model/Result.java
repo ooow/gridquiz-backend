@@ -1,6 +1,6 @@
 package com.griddynamics.gridquiz.repository.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +16,8 @@ public class Result {
     private String id;
     private String userId;
     private String quizId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private long seconds;
     private int points;
     private int outOf;
