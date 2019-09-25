@@ -3,6 +3,7 @@ package com.griddynamics.gridquiz.rest;
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
+import com.griddynamics.gridquiz.rest.model.QuizModel;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class AdminController {
 
     @PostMapping(value = "/quiz/save")
     @ResponseBody
-    public Quiz save(@RequestBody Quiz quiz) {
+    public Quiz save(@RequestBody QuizModel quizModel) {
+        Quiz quiz = quizModel.toObject();
         quiz.getQuestions().forEach(questionRepository::save);
         return quizRepository.save(quiz);
     }
