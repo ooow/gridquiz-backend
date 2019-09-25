@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.service.result;
+package com.griddynamics.gridquiz.service.result;
 
 import static java.util.Objects.nonNull;
 import static java.util.Optional.empty;

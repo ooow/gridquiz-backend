@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.service.quiz;
+package com.griddynamics.gridquiz.service.quiz;
 
 import com.griddynamics.gridquiz.rest.model.MiniQuizModel;
 import java.util.List;

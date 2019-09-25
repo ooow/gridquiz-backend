@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.service.report;
+package com.griddynamics.gridquiz.service.report;
 
 import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
 import static java.util.stream.Collectors.toMap;
@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
         book = new XSSFWorkbook();
 
         // Create sheet
-        XSSFSheet sheet = book.createSheet(String.format("GridQuiz Report $s", LocalDate.now()));
+        XSSFSheet sheet = book.createSheet(String.format("GridQuiz Report %s", LocalDate.now()));
 
         // Add header row
         createHeader(sheet);
@@ -126,7 +126,7 @@ public class ReportServiceImpl implements ReportService {
         XSSFCellStyle defaultStyle = defaultStyle();
 
         XSSFCell id = row.createCell(0);
-        id.setCellValue("id");
+        id.setCellValue("User ID");
         id.setCellStyle(defaultStyle);
 
         XSSFCell name = row.createCell(1);

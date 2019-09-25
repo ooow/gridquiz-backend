@@ -3,13 +3,13 @@ package com.griddynamics.gridquiz.rest;
 import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
 import static java.util.stream.Collectors.toList;
 
-import com.griddynamics.gridquiz.core.service.report.ReportService;
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.rest.model.QuizModel;
 import com.griddynamics.gridquiz.rest.model.UserModel;
+import com.griddynamics.gridquiz.service.report.ReportService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

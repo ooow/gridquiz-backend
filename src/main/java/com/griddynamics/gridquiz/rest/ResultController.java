@@ -1,6 +1,5 @@
 package com.griddynamics.gridquiz.rest;
 
-import com.griddynamics.gridquiz.core.service.result.ResultService;
 import com.griddynamics.gridquiz.repository.QuizRepository;
 import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
@@ -9,6 +8,7 @@ import com.griddynamics.gridquiz.repository.model.User;
 import com.griddynamics.gridquiz.rest.model.AnswersModel;
 import com.griddynamics.gridquiz.rest.model.DashboardModel;
 import com.griddynamics.gridquiz.rest.model.Request;
+import com.griddynamics.gridquiz.service.result.ResultService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

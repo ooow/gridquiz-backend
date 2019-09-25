@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.service.report;
+package com.griddynamics.gridquiz.service.report;
 
 public interface ReportService {
     byte[] generateReport();

@@ -1,4 +1,4 @@
-package com.griddynamics.gridquiz.core.service.result;
+package com.griddynamics.gridquiz.service.result;
 
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.repository.model.Result;
