@@ -1,13 +1,6 @@
 package com.griddynamics.gridquiz.core.controllers;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@CrossOrigin
-@RestController
-@RequestMapping("/api/gridquiz/admin")
-public class AdminController {
+public class OldAdminController {
 
     //    @Autowired
     //    private QuizRepository quizRepository;

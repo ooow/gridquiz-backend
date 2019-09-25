@@ -35,12 +35,6 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @PostMapping(value = "/create")
-    @ResponseBody
-    public Quiz create(@RequestBody Quiz quiz) {
-        return repository.save(quiz);
-    }
-
     @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.BAD_REQUEST.value());

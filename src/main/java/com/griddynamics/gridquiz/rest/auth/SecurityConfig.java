@@ -1,5 +1,7 @@
 package com.griddynamics.gridquiz.rest.auth;
 
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.ADMIN;
+
 import com.griddynamics.gridquiz.repository.RoleRepository;
 import com.griddynamics.gridquiz.rest.auth.jwt.JwtConfigurer;
 import com.griddynamics.gridquiz.rest.auth.jwt.JwtTokenProvider;
@@ -26,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/open/**", "/auth/**")
-                .permitAll()
+                .permitAll().antMatchers("/admin/**").hasAuthority(ADMIN.toString())
                 .anyRequest()
                 .authenticated();
 
