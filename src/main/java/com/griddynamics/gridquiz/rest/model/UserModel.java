@@ -29,4 +29,12 @@ public class UserModel {
         this.role = getHighestRole(user.getRoles());
         this.token = token;
     }
+
+    public UserModel(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
+        this.role = getHighestRole(user.getRoles());
+    }
 }

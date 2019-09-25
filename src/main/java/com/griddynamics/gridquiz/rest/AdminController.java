@@ -1,10 +1,16 @@
 package com.griddynamics.gridquiz.rest;
 
+import static com.griddynamics.gridquiz.repository.model.Role.Enum.USER;
+import static java.util.stream.Collectors.toList;
+
 import com.griddynamics.gridquiz.repository.QuestionRepository;
 import com.griddynamics.gridquiz.repository.QuizRepository;
+import com.griddynamics.gridquiz.repository.UserRepository;
 import com.griddynamics.gridquiz.repository.model.Quiz;
 import com.griddynamics.gridquiz.rest.model.QuizModel;
+import com.griddynamics.gridquiz.rest.model.UserModel;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +34,9 @@ public class AdminController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -44,5 +53,15 @@ public class AdminController {
         Quiz quiz = quizModel.toObject();
         quiz.getQuestions().forEach(questionRepository::save);
         return quizRepository.save(quiz);
+    }
+
+    @GetMapping(value = "/users")
+    @ResponseBody
+    public List<UserModel> users() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserModel::new)
+                .filter(u -> u.getRole().equals(USER))
+                .collect(toList());
     }
 }
